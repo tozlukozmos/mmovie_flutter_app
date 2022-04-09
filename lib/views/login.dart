@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
 
@@ -75,6 +76,7 @@ class _Login extends State<Login> {
                     Expanded(
                       child: AppButtons.appOutlinedButtonIcon(
                         icon: const Icon(Icons.east),
+                        faIcon: const FaIcon(FontAwesomeIcons.google, size: 15),
                         name: "Log in with Google",
                         onPressed: loginWithGoogle,
                       ),
