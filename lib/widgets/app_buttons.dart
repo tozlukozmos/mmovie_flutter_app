@@ -1,28 +1,41 @@
 import 'package:flutter/material.dart';
 
 class AppButtons {
-  static Widget appTextButton({required String name, required Function() onPressed}) {
+  static Widget appTextButton({
+    required String name,
+    required Function() onPressed,
+  }) {
     return TextButton(
       onPressed: onPressed,
       child: Text(name),
     );
   }
 
-  static Widget appElevatedButton({required String name, required Function() onPressed}) {
+  static Widget appElevatedButton({
+    required String name,
+    required Function() onPressed,
+  }) {
     return ElevatedButton(
       onPressed: onPressed,
       child: Text(name),
     );
   }
 
-  static Widget appOutlinedButton({required String name, required Function() onPressed}) {
+  static Widget appOutlinedButton({
+    required String name,
+    required Function() onPressed,
+  }) {
     return OutlinedButton(
       onPressed: onPressed,
       child: Text(name),
     );
   }
 
-  static Widget appIconButton({required String name, required Icon icon, required Function() onPressed}) {
+  static Widget appIconButton({
+    required String name,
+    required Icon icon,
+    required Function() onPressed,
+  }) {
     return IconButton(
       icon: icon,
       onPressed: onPressed,
@@ -30,8 +43,36 @@ class AppButtons {
     );
   }
 
-  static Widget appTextButtonIcon({required String name, required Icon icon, required Function() onPressed}) {
+  static Widget appTextButtonIcon({
+    required String name,
+    required Icon icon,
+    required Function() onPressed,
+  }) {
     return TextButton.icon(
+      icon: icon,
+      onPressed: onPressed,
+      label: Text(name),
+    );
+  }
+
+  static Widget appElevatedButtonIcon({
+    required String name,
+    required Icon icon,
+    required Function() onPressed,
+  }) {
+    return ElevatedButton.icon(
+      icon: icon,
+      onPressed: onPressed,
+      label: Text(name),
+    );
+  }
+
+  static Widget appOutlinedButtonIcon({
+    required String name,
+    required Icon icon,
+    required Function() onPressed,
+  }) {
+    return OutlinedButton.icon(
       icon: icon,
       onPressed: onPressed,
       label: Text(name),

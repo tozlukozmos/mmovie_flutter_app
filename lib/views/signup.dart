@@ -41,9 +41,37 @@ class _Signup extends State<Signup> {
                   controller: _passwordController,
                 ),
                 const SizedBox(height: 20),
-                AppButtons.appElevatedButton(
-                  name: "Sign up",
-                  onPressed: signup,
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppButtons.appElevatedButton(
+                        name: "Sign up",
+                        onPressed: signup,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "By signing up, you agree to our Terms and Data Policy.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: ThemeData.dark().backgroundColor,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Already have an account?"),
+                    const SizedBox(width: 10),
+                    AppButtons.appTextButton(
+                      name: "Log in",
+                      onPressed: () {
+                        Navigator.pushNamed(context, "login_screen");
+                      },
+                    )
+                  ],
                 ),
               ],
             ),

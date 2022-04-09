@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../widgets/app_buttons.dart';
 import '../widgets/app_widgets.dart';
@@ -95,7 +96,8 @@ class _Feed extends State<Feed> {
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Text('Something went wrong');
-                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 300,
@@ -140,7 +142,8 @@ class _Feed extends State<Feed> {
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Text('Something went wrong');
-                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 300,
@@ -150,7 +153,7 @@ class _Feed extends State<Feed> {
                     return Row(
                       children: snapshot.data!.docs.map((e) {
                         Map<String, dynamic> movie =
-                        e.data()! as Map<String, dynamic>;
+                            e.data()! as Map<String, dynamic>;
                         return AppWidgets.movieCard(movie, context);
                       }).toList(),
                     );
@@ -185,7 +188,8 @@ class _Feed extends State<Feed> {
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Text('Something went wrong');
-                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 300,
@@ -195,7 +199,7 @@ class _Feed extends State<Feed> {
                     return Row(
                       children: snapshot.data!.docs.map((e) {
                         Map<String, dynamic> movie =
-                        e.data()! as Map<String, dynamic>;
+                            e.data()! as Map<String, dynamic>;
                         return AppWidgets.movieCard(movie, context);
                       }).toList(),
                     );
@@ -210,6 +214,8 @@ class _Feed extends State<Feed> {
   }
 
   void logout() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
     await _auth.signOut();
     Navigator.pushReplacementNamed(context, 'welcome_screen');
   }

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
 
@@ -41,9 +41,59 @@ class _Login extends State<Login> {
                   controller: _passwordController,
                 ),
                 const SizedBox(height: 20),
-                AppButtons.appElevatedButton(
-                  name: "Log in",
-                  onPressed: login,
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppButtons.appElevatedButton(
+                        name: "Log in",
+                        onPressed: login,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 15.0),
+                        child: const Divider(),
+                      ),
+                    ),
+                    const Text("OR"),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 15.0),
+                        child: const Divider(),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppButtons.appOutlinedButtonIcon(
+                        icon: const Icon(Icons.east),
+                        name: "Log in with Google",
+                        onPressed: loginWithGoogle,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Don't have an account?"),
+                    const SizedBox(width: 10),
+                    AppButtons.appTextButton(
+                      name: "Sign up",
+                      onPressed: () {
+                        Navigator.pushNamed(context, "signup_screen");
+                      },
+                    )
+                  ],
                 ),
               ],
             ),
@@ -78,6 +128,27 @@ class _Login extends State<Login> {
           ),
         );
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          duration: const Duration(milliseconds: 1500),
+        ),
+      );
+    }
+  }
+
+  void loginWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      await _auth.signInWithCredential(credential);
+      Navigator.pushReplacementNamed(context, "feed_screen");
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -10,22 +10,38 @@ class Welcome extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppButtons.appOutlinedButton(
-                name: "Log in",
-                onPressed: () {
-                  Navigator.pushNamed(context, 'login_screen');
-                },
-              ),
-              AppButtons.appElevatedButton(
-                name: "Sign up",
-                onPressed: () {
-                  Navigator.pushNamed(context, 'signup_screen');
-                },
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppButtons.appOutlinedButton(
+                        name: "Log in",
+                        onPressed: () {
+                          Navigator.pushNamed(context, 'login_screen');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppButtons.appElevatedButton(
+                        name: "Sign up",
+                        onPressed: () {
+                          Navigator.pushNamed(context, 'signup_screen');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
