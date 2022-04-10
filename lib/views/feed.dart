@@ -26,8 +26,9 @@ class _Feed extends State<Feed> {
           child: ListView(
             children: [
               UserAccountsDrawerHeader(
-                currentAccountPicture: const CircleAvatar(
-                  child: Icon(Icons.person_rounded),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage:
+                      NetworkImage(_auth.currentUser!.photoURL.toString()),
                 ),
                 accountName: const Text("Welcome,"),
                 accountEmail: Text(_auth.currentUser!.email.toString()),
