@@ -29,6 +29,8 @@ class _AddMovie extends State<AddMovie> {
     "rating": 0,
     "runtime": 0,
     "categories": [],
+    "favorites": [],
+    "wishlist": [],
     "description": "",
     "image": "",
   };
@@ -93,32 +95,33 @@ class _AddMovie extends State<AddMovie> {
 
   void addMovie() async {
     try {
-      _newMovie["name"] = _movieNameController.text;
-      _newMovie["year"] = int.parse(_releaseYearController.text);
-      _newMovie["rating"] = int.parse(_imdbRatingController.text);
-      _newMovie["categories"] = _categoriesController.text.split(",");
-      _newMovie["description"] = _descriptionController.text;
-      _newMovie["image"] = _imageController.text;
-
-      await _movies
-          .add(_newMovie)
-          .then(
-            (value) => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Movie added successfully'),
-                duration: Duration(milliseconds: 1500),
+      if (_formKey.currentState!.validate()) {
+        _newMovie["name"] = _movieNameController.text;
+        _newMovie["year"] = int.parse(_releaseYearController.text);
+        _newMovie["rating"] = int.parse(_imdbRatingController.text);
+        _newMovie["categories"] = _categoriesController.text.split(",");
+        _newMovie["description"] = _descriptionController.text;
+        _newMovie["image"] = _imageController.text;
+        await _movies
+            .add(_newMovie)
+            .then(
+              (value) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Movie added successfully'),
+                  duration: Duration(milliseconds: 1500),
+                ),
               ),
-            ),
-          )
-          .catchError(
-            (error) => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Failed to add movie'),
-                duration: Duration(milliseconds: 1500),
+            )
+            .catchError(
+              (error) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Failed to add movie'),
+                  duration: Duration(milliseconds: 1500),
+                ),
               ),
-            ),
-          );
-      Navigator.pushReplacementNamed(context, "feed_screen");
+            );
+        Navigator.pushReplacementNamed(context, "feed_screen");
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
