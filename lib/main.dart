@@ -26,14 +26,14 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.from(colorScheme: const ColorScheme.dark()),
       themeMode: ThemeMode.dark,
-      home: _auth.currentUser != null ? Feed() : Welcome(),
+      home: _auth.currentUser != null ? const Feed() : const Welcome(),
       routes: {
-        'welcome_screen': (context) => Welcome(),
-        'login_screen': (context) => Login(),
-        'signup_screen': (context) => Signup(),
-        'feed_screen': (context) => Feed(),
-        'movie_detail_screen': (context) => MovieDetail(),
-        'see_more_screen': (context) => SeeMore(),
+        'welcome_screen': (context) => const Welcome(),
+        'login_screen': (context) => const Login(),
+        'signup_screen': (context) => const Signup(),
+        'feed_screen': (context) => const Feed(),
+        'movie_detail_screen': (context) => const MovieDetail(),
+        'see_more_screen': (context) => const SeeMore(),
       },
     );
   }

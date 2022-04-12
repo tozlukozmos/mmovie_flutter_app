@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppButtons {
   static Widget appTextButton({
@@ -44,6 +43,18 @@ class AppButtons {
     );
   }
 
+  static Widget appToggleButtons({
+    required List<bool> isSelected,
+    required List<Widget> buttons,
+    required Function(int) onPressed,
+  }) {
+    return ToggleButtons(
+      isSelected: isSelected,
+      children: buttons,
+      onPressed: onPressed,
+    );
+  }
+
   static Widget appTextButtonIcon({
     required String name,
     required Icon icon,
@@ -71,12 +82,10 @@ class AppButtons {
   static Widget appOutlinedButtonIcon({
     required String name,
     required Icon icon,
-    FaIcon? faIcon,
     required Function() onPressed,
   }) {
-    Widget _icon = faIcon == null ? icon : faIcon;
     return OutlinedButton.icon(
-      icon: _icon,
+      icon: icon,
       onPressed: onPressed,
       label: Text(name),
     );

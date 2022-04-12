@@ -17,11 +17,37 @@ class _Feed extends State<Feed> {
   final _auth = FirebaseAuth.instance;
   final Query _moviesStream = FirebaseFirestore.instance.collection('movies');
 
+  final List<bool> _isSelected = [true, false];
+  final List<Widget> _buttons = const [Text("ENG"), Text("TR")];
+  void toggle(int value) {
+    setState(() {
+      for (var i = 0; i < _isSelected.length; i++) {
+        if (i == value) {
+          _isSelected[value] = true;
+        } else {
+          _isSelected[i] = false;
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text("Feed")),
+        appBar: AppBar(
+          title: const Text("Feed"),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: AppButtons.appToggleButtons(
+                isSelected: _isSelected,
+                buttons: _buttons,
+                onPressed: toggle,
+              ),
+            )
+          ],
+        ),
         drawer: Drawer(
           child: ListView(
             children: [
