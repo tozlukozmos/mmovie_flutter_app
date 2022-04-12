@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/app_form.dart';
 import '../widgets/app_buttons.dart';
+import '../widgets/app_form.dart';
 
 class AddMovie extends StatefulWidget {
   const AddMovie({Key? key}) : super(key: key);
@@ -19,11 +19,12 @@ class _AddMovie extends State<AddMovie> {
   final TextEditingController _movieNameController = TextEditingController();
   final TextEditingController _releaseYearController = TextEditingController();
   final TextEditingController _imdbRatingController = TextEditingController();
+  final TextEditingController _runtimeController = TextEditingController();
   final TextEditingController _categoriesController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
 
-  final Map<String, dynamic> _newMovie = {
+  Map<String, dynamic> _newMovie = {
     "name": "",
     "year": 0,
     "rating": 0,
@@ -61,7 +62,12 @@ class _AddMovie extends State<AddMovie> {
               ),
               const SizedBox(height: 20),
               AppForm.appTextFormField(
-                label: "Categories",
+                label: "Runtime (in terms of minute)",
+                controller: _runtimeController,
+              ),
+              const SizedBox(height: 20),
+              AppForm.appTextFormField(
+                label: "Categories (use comma to separate them)",
                 controller: _categoriesController,
               ),
               const SizedBox(height: 20),
@@ -96,31 +102,41 @@ class _AddMovie extends State<AddMovie> {
   void addMovie() async {
     try {
       if (_formKey.currentState!.validate()) {
-        _newMovie["name"] = _movieNameController.text;
-        _newMovie["year"] = int.parse(_releaseYearController.text);
-        _newMovie["rating"] = int.parse(_imdbRatingController.text);
-        _newMovie["categories"] = _categoriesController.text.split(",").map((e) => e.trim());
-        _newMovie["description"] = _descriptionController.text;
-        _newMovie["image"] = _imageController.text;
+        _newMovie = {
+          "name": _movieNameController.text,
+          "year": int.parse(_releaseYearController.text),
+          "rating": int.parse(_imdbRatingController.text),
+          "runtime": int.parse(_runtimeController.text),
+          "categories":
+              _categoriesController.text.split(",").map((e) => e.trim()).toList(),
+          "favorites": [],
+          "wishlist": [],
+          "description": _descriptionController.text,
+          "image": _imageController.text,
+        };
         await _movies
             .add(_newMovie)
             .then(
-              (value) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Movie added successfully'),
-                  duration: Duration(milliseconds: 1500),
+              (value) => {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Movie added successfully'),
+                    duration: Duration(milliseconds: 1500),
+                  ),
                 ),
-              ),
+                Navigator.pushReplacementNamed(context, "feed_screen"),
+              },
             )
             .catchError(
-              (error) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Failed to add movie'),
-                  duration: Duration(milliseconds: 1500),
+              (error) => {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(error.toString()),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
                 ),
-              ),
+              },
             );
-        Navigator.pushReplacementNamed(context, "feed_screen");
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

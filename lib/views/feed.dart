@@ -168,12 +168,12 @@ class _Feed extends State<Feed> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Romance", style: TextStyle(fontSize: 20)),
+                const Text("Comedy", style: TextStyle(fontSize: 20)),
                 AppButtons.appTextButton(
                   name: "see more",
                   onPressed: () {
                     Navigator.pushNamed(context, 'see_more_screen', arguments: {
-                      'title': 'Romance',
+                      'title': 'Comedy',
                     });
                   },
                 ),
@@ -184,7 +184,7 @@ class _Feed extends State<Feed> {
               scrollDirection: Axis.horizontal,
               child: StreamBuilder(
                 stream: _moviesStream
-                    .where('categories', arrayContains: 'Romance')
+                    .where('categories', arrayContains: 'Comedy')
                     .orderBy('rating', descending: true)
                     .limit(15)
                     .snapshots(),
