@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'views/add_movie.dart';
 import 'views/feed.dart';
 import 'views/login.dart';
 import 'views/movie_detail.dart';
@@ -34,6 +35,7 @@ class App extends StatelessWidget {
         'feed_screen': (context) => const Feed(),
         'movie_detail_screen': (context) => const MovieDetail(),
         'see_more_screen': (context) => const SeeMore(),
+        'add_movie_screen': (context) => AddMovie(),
       },
     );
   }
