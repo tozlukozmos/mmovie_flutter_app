@@ -99,7 +99,7 @@ class _AddMovie extends State<AddMovie> {
         _newMovie["name"] = _movieNameController.text;
         _newMovie["year"] = int.parse(_releaseYearController.text);
         _newMovie["rating"] = int.parse(_imdbRatingController.text);
-        _newMovie["categories"] = _categoriesController.text.split(", ");
+        _newMovie["categories"] = _categoriesController.text.split(",").map((e) => e.trim());
         _newMovie["description"] = _descriptionController.text;
         _newMovie["image"] = _imageController.text;
         await _movies
