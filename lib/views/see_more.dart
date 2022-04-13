@@ -56,7 +56,8 @@ class _SeeMore extends State<SeeMore> {
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
-                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
                   return SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 300,
@@ -70,17 +71,17 @@ class _SeeMore extends State<SeeMore> {
                           .toLowerCase()
                           .contains(_searchQuery.toLowerCase()))
                       .toList();
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemCount: movies.length,
-                    itemBuilder: (context, index) {
+                  return Column(
+                    children: movies.map((e) {
+                      Map<String, dynamic> movie =
+                          e.data()! as Map<String, dynamic>;
+                      Map<String, dynamic> _movie = {"id": e.id, ...movie};
                       return AppWidgets.movieCardMini(
-                        movies[index],
+                        _movie,
                         context,
-                        snapshot.data!.docs[index].reference.id,
+                        _movie["id"],
                       );
-                    },
+                    }).toList(),
                   );
                 }
               },

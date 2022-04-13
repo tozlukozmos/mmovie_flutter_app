@@ -111,7 +111,8 @@ class _Feed extends State<Feed> {
                       children: snapshot.data!.docs.map((e) {
                         Map<String, dynamic> movie =
                             e.data()! as Map<String, dynamic>;
-                        return AppWidgets.movieCard(movie, context);
+                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
+                        return AppWidgets.movieCard(_movie, context);
                       }).toList(),
                     );
                   }
@@ -156,8 +157,9 @@ class _Feed extends State<Feed> {
                     return Row(
                       children: snapshot.data!.docs.map((e) {
                         Map<String, dynamic> movie =
-                            e.data()! as Map<String, dynamic>;
-                        return AppWidgets.movieCard(movie, context);
+                        e.data()! as Map<String, dynamic>;
+                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
+                        return AppWidgets.movieCard(_movie, context);
                       }).toList(),
                     );
                   }
@@ -202,8 +204,9 @@ class _Feed extends State<Feed> {
                     return Row(
                       children: snapshot.data!.docs.map((e) {
                         Map<String, dynamic> movie =
-                            e.data()! as Map<String, dynamic>;
-                        return AppWidgets.movieCard(movie, context);
+                        e.data()! as Map<String, dynamic>;
+                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
+                        return AppWidgets.movieCard(_movie, context);
                       }).toList(),
                     );
                   }
