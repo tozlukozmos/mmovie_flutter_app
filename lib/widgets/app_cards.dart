@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-class AppWidgets {
-  static Widget movieCard(Map movie, context) {
+class AppCards {
+  static Widget movieCard({
+    required Map movie,
+    required BuildContext context,
+  }) {
     return GestureDetector(
       onTap: () => {
         Navigator.pushNamed(context, 'movie_detail_screen', arguments: {
-          'movie': movie,
+          'movie': movie
         }),
       },
       child: Card(
@@ -23,14 +26,18 @@ class AppWidgets {
     );
   }
 
-  static Widget movieCardMini(movie, context, id) {
+  static Widget movieCardMini({
+    required Map movie,
+    required BuildContext context,
+  }) {
     return ListTile(
       leading: Image.network(movie['image']),
       title: Text(movie['name']),
       subtitle: Text(movie['year'].toString()),
       onTap: () => {
-        Navigator.pushNamed(context, 'movie_detail_screen',
-            arguments: {'movie': movie, 'id': id}),
+        Navigator.pushNamed(context, 'movie_detail_screen', arguments: {
+          'movie': movie,
+        }),
       },
     );
   }

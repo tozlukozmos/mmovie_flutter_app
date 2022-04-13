@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../widgets/app_buttons.dart';
-import '../widgets/app_widgets.dart';
+import '../widgets/app_cards.dart';
+import '../widgets/app_drawer.dart';
 
 class Feed extends StatefulWidget {
   const Feed({Key? key}) : super(key: key);
@@ -14,66 +13,14 @@ class Feed extends StatefulWidget {
 }
 
 class _Feed extends State<Feed> {
-  final _auth = FirebaseAuth.instance;
   final Query _moviesStream = FirebaseFirestore.instance.collection('movies');
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Feed"),
-        ),
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              UserAccountsDrawerHeader(
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(_auth.currentUser!.photoURL.toString()),
-                ),
-                accountName: const Text("Welcome,"),
-                accountEmail: Text(_auth.currentUser!.email.toString()),
-              ),
-              ListTile(
-                leading: const Icon(Icons.favorite_rounded),
-                title: const Text("Favorites"),
-                onTap: () {
-                  Navigator.pushNamed(context, "favorites_screen");
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.bookmark_rounded),
-                title: const Text("Wishlist"),
-                onTap: () {
-                  Navigator.pushNamed(context, "wishlist_screen");
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings_rounded),
-                title: const Text("Settings"),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.mail_rounded),
-                title: const Text("Contact us"),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.info_rounded),
-                title: const Text("About"),
-                onTap: () {},
-              ),
-              ListTile(
-                iconColor: Colors.redAccent,
-                textColor: Colors.redAccent,
-                leading: const Icon(Icons.logout),
-                title: const Text("Log out"),
-                onTap: logout,
-              ),
-            ],
-          ),
-        ),
+        appBar: AppBar(title: const Text("Feed")),
+        drawer: AppDrawer(),
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
@@ -116,7 +63,10 @@ class _Feed extends State<Feed> {
                         Map<String, dynamic> movie =
                             e.data()! as Map<String, dynamic>;
                         Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppWidgets.movieCard(_movie, context);
+                        return AppCards.movieCard(
+                          movie: _movie,
+                          context: context,
+                        );
                       }).toList(),
                     );
                   }
@@ -161,9 +111,12 @@ class _Feed extends State<Feed> {
                     return Row(
                       children: snapshot.data!.docs.map((e) {
                         Map<String, dynamic> movie =
-                        e.data()! as Map<String, dynamic>;
+                            e.data()! as Map<String, dynamic>;
                         Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppWidgets.movieCard(_movie, context);
+                        return AppCards.movieCard(
+                          movie: _movie,
+                          context: context,
+                        );
                       }).toList(),
                     );
                   }
@@ -208,9 +161,12 @@ class _Feed extends State<Feed> {
                     return Row(
                       children: snapshot.data!.docs.map((e) {
                         Map<String, dynamic> movie =
-                        e.data()! as Map<String, dynamic>;
+                            e.data()! as Map<String, dynamic>;
                         Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppWidgets.movieCard(_movie, context);
+                        return AppCards.movieCard(
+                          movie: _movie,
+                          context: context,
+                        );
                       }).toList(),
                     );
                   }
@@ -227,12 +183,5 @@ class _Feed extends State<Feed> {
         ),
       ),
     );
-  }
-
-  void logout() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut();
-    await _auth.signOut();
-    Navigator.pushReplacementNamed(context, 'welcome_screen');
   }
 }

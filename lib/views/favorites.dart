@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/app_form.dart';
-import '../widgets/app_widgets.dart';
+import '../widgets/app_cards.dart';
 
 class Favorites extends StatefulWidget {
   const Favorites({Key? key}) : super(key: key);
@@ -69,12 +69,11 @@ class _Favorites extends State<Favorites> {
                   return Column(
                     children: movies.map((e) {
                       Map<String, dynamic> movie =
-                          e.data()! as Map<String, dynamic>;
+                      e.data()! as Map<String, dynamic>;
                       Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                      return AppWidgets.movieCardMini(
-                        _movie,
-                        context,
-                        _movie["id"],
+                      return AppCards.movieCardMini(
+                        movie: _movie,
+                        context: context,
                       );
                     }).toList(),
                   );

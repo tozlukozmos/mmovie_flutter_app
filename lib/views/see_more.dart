@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/app_cards.dart';
 import '../widgets/app_form.dart';
-import '../widgets/app_widgets.dart';
 
 class SeeMore extends StatefulWidget {
   const SeeMore({Key? key}) : super(key: key);
@@ -76,10 +76,9 @@ class _SeeMore extends State<SeeMore> {
                       Map<String, dynamic> movie =
                           e.data()! as Map<String, dynamic>;
                       Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                      return AppWidgets.movieCardMini(
-                        _movie,
-                        context,
-                        _movie["id"],
+                      return AppCards.movieCardMini(
+                        movie: _movie,
+                        context: context,
                       );
                     }).toList(),
                   );
