@@ -38,12 +38,16 @@ class _Feed extends State<Feed> {
               ListTile(
                 leading: const Icon(Icons.favorite_rounded),
                 title: const Text("Favorites"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, "favorites_screen");
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.bookmark_rounded),
                 title: const Text("Wishlist"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, "wishlist_screen");
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.settings_rounded),

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mmovie/views/favorites.dart';
+import 'package:mmovie/views/wishlist.dart';
 
 import 'views/add_movie.dart';
 import 'views/feed.dart';
@@ -35,7 +37,9 @@ class App extends StatelessWidget {
         'feed_screen': (context) => const Feed(),
         'movie_detail_screen': (context) => const MovieDetail(),
         'see_more_screen': (context) => const SeeMore(),
-        'add_movie_screen': (context) => AddMovie(),
+        'add_movie_screen': (context) => const AddMovie(),
+        'favorites_screen': (context) => const Favorites(),
+        'wishlist_screen': (context) => const Wishlist(),
       },
     );
   }
