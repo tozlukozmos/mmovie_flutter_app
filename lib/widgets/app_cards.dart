@@ -28,7 +28,7 @@ class AppCards {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [ThemeData.dark().primaryColor, Colors.black12],
+                        colors: [ThemeData.dark().primaryColorDark, Colors.transparent],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
