@@ -177,6 +177,55 @@ class _Feed extends State<Feed> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                const Text("Drama", style: TextStyle(fontSize: 20)),
+                AppButtons.appTextButton(
+                  name: "see more",
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'see_more_screen', arguments: {
+                      'title': 'Drama',
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: StreamBuilder(
+                stream: _moviesStream
+                    .where('categories', arrayContains: 'Drama')
+                    .limit(20)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 300,
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  } else {
+                    return Row(
+                      children: snapshot.data!.docs.map((e) {
+                        Map<String, dynamic> movie =
+                        e.data()! as Map<String, dynamic>;
+                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
+                        return AppCards.movieCard(
+                          movie: _movie,
+                          context: context,
+                        );
+                      }).toList(),
+                    );
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 const Text("Adventure", style: TextStyle(fontSize: 20)),
                 AppButtons.appTextButton(
                   name: "see more",

@@ -88,12 +88,14 @@ class _MovieDetail extends State<MovieDetail> {
               ),
             ),
             const SizedBox(height: 20),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                _movie['image'],
-                width: 350,
-                height: 500,
+            AspectRatio(
+              aspectRatio: 2/3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.network(
+                  _movie['image'],
+                  width: double.infinity,
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -118,15 +120,9 @@ class _MovieDetail extends State<MovieDetail> {
                 const SizedBox(width: 20),
                 Row(
                   children: [
-                    Icon(
-                      Icons.star_outline_rounded,
-                      color: getRatingColor(_movie["rating"]),
-                    ),
+                    const Icon(Icons.star_rate_rounded),
                     const SizedBox(width: 5),
-                    Text(
-                      (_movie["rating"] / 10).toString(),
-                      style: TextStyle(color: getRatingColor(_movie["rating"])),
-                    ),
+                    Text((_movie["rating"] / 10).toString()),
                   ],
                 ),
               ],
@@ -134,7 +130,7 @@ class _MovieDetail extends State<MovieDetail> {
             const SizedBox(height: 20),
             Center(child: Text(getCategories(_movie['categories']))),
             const SizedBox(height: 30),
-            AppButtons.appOutlinedButtonIcon(
+            AppButtons.appElevatedButtonIcon(
               name: _isFavorite ? "Remove from favorites" : "Add to favorites",
               icon: _isFavorite
                   ? const Icon(Icons.favorite_rounded)
@@ -175,7 +171,11 @@ class _MovieDetail extends State<MovieDetail> {
     int hour = 0, minute = 0;
     minute = minutes % 60;
     hour = (minutes - minutes % 60) ~/ 60;
-    return "$hour h $minute m";
+    if(minute == 0){
+      return "$hour h";
+    } else {
+      return "$hour h $minute m";
+    }
   }
 
   Color getRatingColor(number) {
