@@ -12,7 +12,7 @@ class AppCards {
         }),
       },
       child: Card(
-        margin: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.only(right: 15),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.network(

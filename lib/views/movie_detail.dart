@@ -87,63 +87,51 @@ class _MovieDetail extends State<MovieDetail> {
                 style: const TextStyle(fontSize: 20),
               ),
             ),
-            const SizedBox(height: 30),
-            Center(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Image.network(
-                      _movie['image'],
-                      width: 200,
-                      height: 300,
-                    ),
-                  ),
-                  Positioned(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 10,
-                      ),
-                      child: Text(_movie['year'].toString()),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: const BorderRadius.only(
-                          bottomRight: Radius.circular(5),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: -18,
-                    bottom: -18,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Theme.of(context).colorScheme.background,
-                      ),
-                      alignment: Alignment.center,
-                      child: Stack(
-                        children: [
-                          CircularProgressIndicator(
-                            color: getRatingColor(_movie['rating'] / 100),
-                            value: _movie['rating'] / 100,
-                          ),
-                          Positioned.fill(
-                            child:
-                                Align(child: Text(_movie['rating'].toString())),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+            const SizedBox(height: 20),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.network(
+                _movie['image'],
+                width: 350,
+                height: 500,
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_month_rounded),
+                    const SizedBox(width: 5),
+                    Text(_movie["year"].toString()),
+                  ],
+                ),
+                const SizedBox(width: 20),
+                Row(
+                  children: [
+                    const Icon(Icons.access_time_rounded),
+                    const SizedBox(width: 5),
+                    Text(getDuration(_movie["runtime"])),
+                  ],
+                ),
+                const SizedBox(width: 20),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star_outline_rounded,
+                      color: getRatingColor(_movie["rating"]),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      (_movie["rating"] / 10).toString(),
+                      style: TextStyle(color: getRatingColor(_movie["rating"])),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             Center(child: Text(getCategories(_movie['categories']))),
             const SizedBox(height: 30),
             AppButtons.appOutlinedButtonIcon(
@@ -163,7 +151,8 @@ class _MovieDetail extends State<MovieDetail> {
             const SizedBox(height: 30),
             const Text("Description", style: TextStyle(fontSize: 20)),
             const SizedBox(height: 20),
-            Text(_movie['description']),
+            Text(_movie['description'], style: const TextStyle(height: 1.5)),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -182,10 +171,17 @@ class _MovieDetail extends State<MovieDetail> {
     return result;
   }
 
+  String getDuration(int minutes) {
+    int hour = 0, minute = 0;
+    minute = minutes % 60;
+    hour = (minutes - minutes % 60) ~/ 60;
+    return "$hour h $minute m";
+  }
+
   Color getRatingColor(number) {
-    if (number >= 0.8) {
+    if (number >= 70) {
       return Colors.green;
-    } else if (number >= 0.5) {
+    } else if (number >= 50) {
       return Colors.yellow;
     } else {
       return Colors.red;
