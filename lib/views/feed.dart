@@ -35,6 +35,11 @@ class _Feed extends State<Feed> {
               title: "Drama",
               isOrderByRating: true,
             ),
+            AppSlider.movieSlider(
+              context: context,
+              title: "Comedy",
+              isOrderByRating: true,
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
