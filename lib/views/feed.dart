@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/app_buttons.dart';
-import '../widgets/app_cards.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/app_slider.dart';
 
 class Feed extends StatefulWidget {
   const Feed({Key? key}) : super(key: key);
@@ -13,8 +11,6 @@ class Feed extends StatefulWidget {
 }
 
 class _Feed extends State<Feed> {
-  final Query _moviesStream = FirebaseFirestore.instance.collection('movies');
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,252 +20,20 @@ class _Feed extends State<Feed> {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Popular", style: TextStyle(fontSize: 20)),
-                AppButtons.appTextButton(
-                  name: "see more",
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'see_more_screen', arguments: {
-                      'title': 'Popular',
-                    });
-                  },
-                ),
-              ],
+            AppSlider.movieSlider(
+              context: context,
+              title: "Popular",
+              isOrderByRating: true,
             ),
-            const SizedBox(height: 5),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: StreamBuilder(
-                stream: _moviesStream
-                    .where('rating', isGreaterThan: 80)
-                    .orderBy('rating', descending: true)
-                    .limit(15)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Something went wrong');
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  } else {
-                    return Row(
-                      children: snapshot.data!.docs.map((e) {
-                        Map<String, dynamic> movie =
-                            e.data()! as Map<String, dynamic>;
-                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppCards.movieCard(
-                          movie: _movie,
-                          context: context,
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
-              ),
+            AppSlider.movieSlider(
+              context: context,
+              title: "Animation",
+              isOrderByRating: true,
             ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Animation", style: TextStyle(fontSize: 20)),
-                AppButtons.appTextButton(
-                  name: "see more",
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'see_more_screen', arguments: {
-                      'title': 'Animation',
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: StreamBuilder(
-                stream: _moviesStream
-                    .where('categories', arrayContains: 'Animation')
-                    .orderBy('rating', descending: true)
-                    .limit(15)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Something went wrong');
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  } else {
-                    return Row(
-                      children: snapshot.data!.docs.map((e) {
-                        Map<String, dynamic> movie =
-                            e.data()! as Map<String, dynamic>;
-                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppCards.movieCard(
-                          movie: _movie,
-                          context: context,
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
-              ),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Comedy", style: TextStyle(fontSize: 20)),
-                AppButtons.appTextButton(
-                  name: "see more",
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'see_more_screen', arguments: {
-                      'title': 'Comedy',
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: StreamBuilder(
-                stream: _moviesStream
-                    .where('categories', arrayContains: 'Comedy')
-                    .orderBy('rating', descending: true)
-                    .limit(15)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Something went wrong');
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  } else {
-                    return Row(
-                      children: snapshot.data!.docs.map((e) {
-                        Map<String, dynamic> movie =
-                            e.data()! as Map<String, dynamic>;
-                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppCards.movieCard(
-                          movie: _movie,
-                          context: context,
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
-              ),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Drama", style: TextStyle(fontSize: 20)),
-                AppButtons.appTextButton(
-                  name: "see more",
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'see_more_screen', arguments: {
-                      'title': 'Drama',
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: StreamBuilder(
-                stream: _moviesStream
-                    .where('categories', arrayContains: 'Drama')
-                    .limit(20)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Something went wrong');
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  } else {
-                    return Row(
-                      children: snapshot.data!.docs.map((e) {
-                        Map<String, dynamic> movie =
-                        e.data()! as Map<String, dynamic>;
-                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppCards.movieCard(
-                          movie: _movie,
-                          context: context,
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
-              ),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Adventure", style: TextStyle(fontSize: 20)),
-                AppButtons.appTextButton(
-                  name: "see more",
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'see_more_screen', arguments: {
-                      'title': 'Adventure',
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: StreamBuilder(
-                stream: _moviesStream
-                    .where('categories', arrayContains: 'Adventure')
-                    .limit(20)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Something went wrong');
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  } else {
-                    return Row(
-                      children: snapshot.data!.docs.map((e) {
-                        Map<String, dynamic> movie =
-                        e.data()! as Map<String, dynamic>;
-                        Map<String, dynamic> _movie = {"id": e.id, ...movie};
-                        return AppCards.movieCard(
-                          movie: _movie,
-                          context: context,
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
-              ),
+            AppSlider.movieSlider(
+              context: context,
+              title: "Drama",
+              isOrderByRating: true,
             ),
           ],
         ),
