@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mmovie/widgets/app_buttons.dart';
 
 import '../widgets/app_drawer.dart';
 import '../widgets/app_slider.dart';
@@ -15,7 +16,18 @@ class _Feed extends State<Feed> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text("Feed")),
+        appBar: AppBar(
+          title: const Text("Feed"),
+          actions: [
+            AppButtons.appIconButton(
+              name: "search",
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                Navigator.pushNamed(context, 'search_screen');
+              },
+            ),
+          ],
+        ),
         drawer: AppDrawer(),
         body: ListView(
           padding: const EdgeInsets.all(20),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../views/search.dart';
 import '../views/add_movie.dart';
 import '../views/favorites.dart';
 import '../views/feed.dart';
@@ -20,4 +21,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   'add_movie_screen': (context) => const AddMovie(),
   'favorites_screen': (context) => const Favorites(),
   'wishlist_screen': (context) => const Wishlist(),
+  'search_screen': (context) => const Search(),
 };
