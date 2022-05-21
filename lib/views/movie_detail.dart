@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:mmovie/widgets/app_buttons.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MovieDetail extends StatefulWidget {
   const MovieDetail({Key? key}) : super(key: key);
@@ -77,7 +82,36 @@ class _MovieDetail extends State<MovieDetail> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text("Details")),
+        appBar: AppBar(
+          title: const Text("Details"),
+          actions: [
+            AppButtons.appIconButton(
+              name: "share_movie",
+              icon: const Icon(Icons.share),
+              onPressed: () async {
+                final box = context.findRenderObject() as RenderBox?;
+                String title = _movie["name"] +
+                    " (" +
+                    _movie["year"].toString() +
+                    ") " +
+                    "IMDB: " +
+                    (_movie["rating"] / 10).toString();
+                final url = Uri.parse(_movie["image"]);
+                final response = await http.get(url);
+                final bytes = response.bodyBytes;
+
+                final temp = await getTemporaryDirectory();
+                final path = '${temp.path}/image.jpg';
+                File(path).writeAsBytesSync(bytes);
+
+                await Share.shareFiles([path],
+                    text: title,
+                    sharePositionOrigin:
+                        box!.localToGlobal(Offset.zero) & box.size);
+              },
+            )
+          ],
+        ),
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
@@ -89,7 +123,7 @@ class _MovieDetail extends State<MovieDetail> {
             ),
             const SizedBox(height: 20),
             AspectRatio(
-              aspectRatio: 2/3,
+              aspectRatio: 2 / 3,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: Image.network(
@@ -171,7 +205,7 @@ class _MovieDetail extends State<MovieDetail> {
     int hour = 0, minute = 0;
     minute = minutes % 60;
     hour = (minutes - minutes % 60) ~/ 60;
-    if(minute == 0){
+    if (minute == 0) {
       return "$hour h";
     } else {
       return "$hour h $minute m";
