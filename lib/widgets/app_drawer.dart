@@ -40,20 +40,22 @@ class AppDrawer extends StatelessWidget {
               Navigator.pushNamed(context, "wishlist_screen");
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.settings_rounded),
-            title: const Text("Settings"),
-            onTap: () {},
-          ),
-          ListTile(
-            leading: const Icon(Icons.mail_rounded),
-            title: const Text("Contact us"),
-            onTap: () {},
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.settings_rounded),
+          //   title: const Text("Settings"),
+          //   onTap: () {},
+          // ),
+          // ListTile(
+          //   leading: const Icon(Icons.mail_rounded),
+          //   title: const Text("Contact us"),
+          //   onTap: () {},
+          // ),
           ListTile(
             leading: const Icon(Icons.info_rounded),
             title: const Text("About"),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, 'about_screen');
+            },
           ),
           ListTile(
             iconColor: Colors.redAccent,
