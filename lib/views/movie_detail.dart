@@ -20,6 +20,22 @@ class _MovieDetail extends State<MovieDetail> {
   final CollectionReference _movies =
       FirebaseFirestore.instance.collection('movies');
 
+  List<String> admins = [
+    "furkan@gmail.com",
+    "omer@gmail.com",
+    "abdulkadir@gmail.com"
+  ];
+
+  bool checkUser() {
+    String user = _auth.currentUser!.email.toString();
+
+    if (admins.contains(user)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
@@ -85,6 +101,7 @@ class _MovieDetail extends State<MovieDetail> {
         appBar: AppBar(
           title: const Text("Details"),
           actions: [
+            checkUser() ? editButton() : Text(''),
             AppButtons.appIconButton(
               name: "share_movie",
               icon: const Icon(Icons.share),
@@ -187,6 +204,11 @@ class _MovieDetail extends State<MovieDetail> {
         ),
       ),
     );
+  }
+
+  Widget editButton() {
+    return AppButtons.appIconButton(
+        name: 'movie_edit', icon: Icon(Icons.edit), onPressed: () {});
   }
 
   String getCategories(List array) {
