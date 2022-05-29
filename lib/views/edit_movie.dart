@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
 
-
-
-class edit_movie extends StatelessWidget{
-
-  edit_movie({Key? key,required this.movie}) : super(key: key);
+class edit_movie extends StatelessWidget {
+  edit_movie({Key? key, required this.movie}) : super(key: key);
   final Map movie;
 
   final CollectionReference _movies =
@@ -23,26 +20,52 @@ class edit_movie extends StatelessWidget{
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
 
-  
-
-  
-
   @override
   Widget build(BuildContext context) {
-
-    _movieNameController.text=movie["name"];
-    _releaseYearController.text=movie["year"].toString();
-    _imdbRatingController.text=movie["rating"].toString();
-    _runtimeController.text=movie["runtime"].toString();
-    _categoriesController.text=getCategories(movie["categories"]);
-    _descriptionController.text=movie["description"]; 
-    _imageController.text=movie["image"]; 
-
-
+    _movieNameController.text = movie["name"];
+    _releaseYearController.text = movie["year"].toString();
+    _imdbRatingController.text = movie["rating"].toString();
+    _runtimeController.text = movie["runtime"].toString();
+    _categoriesController.text = getCategories(movie["categories"]);
+    _descriptionController.text = movie["description"];
+    _imageController.text = movie["image"];
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text("Edit Movie")),
+        appBar: AppBar(
+          title: const Text("Edit Movie"),
+          actions: [
+            AppButtons.appIconButton(
+              name: 'delete buton',
+              icon: Icon(Icons.delete),
+              onPressed: () async {
+                CollectionReference users =
+                    FirebaseFirestore.instance.collection('movies');
+                try {
+                  await users
+                      .doc(movie['id'])
+                      .delete()
+                      .then(
+                        (value) => {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Movie deleted successfully'),
+                              duration: Duration(milliseconds: 1500),
+                            ),
+                          ),
+                          Navigator.pushReplacementNamed(
+                              context, "feed_screen"),
+                        },
+                      )
+                      .catchError(
+                          (error) => print("Failed to delete user: $error"));
+                } catch (e) {
+                  print(e);
+                }
+              },
+            )
+          ],
+        ),
         body: Form(
           key: _formKey,
           child: ListView(
@@ -50,7 +73,6 @@ class edit_movie extends StatelessWidget{
             children: [
               AppForm.appTextFormField(
                 label: "Movie name",
-                
                 controller: _movieNameController,
               ),
               const SizedBox(height: 20),
@@ -91,17 +113,39 @@ class edit_movie extends StatelessWidget{
                       icon: const Icon(Icons.edit),
                       name: "Edit Movie",
                       onPressed: () async {
-
-                    CollectionReference movies = FirebaseFirestore.instance.collection('movies');
-                    print(movie["id"]);
-                    print(_imdbRatingController.text);
-                    await movies
-                    .doc(movie["id"])
-                    .update({'name':_movieNameController.text,'year':int.parse(_releaseYearController.text),'rating':int.parse(_imdbRatingController.text),'runtime':int.parse(_runtimeController.text),'categories':_categoriesController.text.split(",").map((e) => e.trim()).toList(),'description':_descriptionController.text,'image':_imageController.text})
-                    .then((value) => print("User Updated"))
-                    .catchError((error) => print("Failed to update user: $error"));
-                    Navigator.pushNamed(context, "feed_screen");   
-
+                        CollectionReference movies =
+                            FirebaseFirestore.instance.collection('movies');
+                        print(movie["id"]);
+                        print(_imdbRatingController.text);
+                        await movies
+                            .doc(movie["id"])
+                            .update({
+                              'name': _movieNameController.text,
+                              'year': int.parse(_releaseYearController.text),
+                              'rating': int.parse(_imdbRatingController.text),
+                              'runtime': int.parse(_runtimeController.text),
+                              'categories': _categoriesController.text
+                                  .split(",")
+                                  .map((e) => e.trim())
+                                  .toList(),
+                              'description': _descriptionController.text,
+                              'image': _imageController.text
+                            })
+                            .then(
+                              (value) => {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Movie edited successfully'),
+                                    duration: Duration(milliseconds: 1500),
+                                  ),
+                                ),
+                                Navigator.pushReplacementNamed(
+                                    context, "feed_screen"),
+                              },
+                            )
+                            .catchError((error) =>
+                                print("Failed to update user: $error"));
+                        Navigator.pushNamed(context, "feed_screen");
                       },
                     ),
                   ),
@@ -113,7 +157,8 @@ class edit_movie extends StatelessWidget{
       ),
     );
   }
-String getCategories(List array) {
+
+  String getCategories(List array) {
     String result = "";
     for (int index = 0; index < array.length; index++) {
       if (index == array.length - 1) {
@@ -124,7 +169,6 @@ String getCategories(List array) {
     }
     return result;
   }
-    
 
   /*@override
   void dispose() {
@@ -136,6 +180,5 @@ String getCategories(List array) {
     _imageController.dispose();
     super.dispose();
   }*/
-
 
 }
