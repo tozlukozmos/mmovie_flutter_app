@@ -36,34 +36,56 @@ class edit_movie extends StatelessWidget {
           title: const Text("Edit Movie"),
           actions: [
             AppButtons.appIconButton(
-              name: 'delete buton',
-              icon: Icon(Icons.delete),
-              onPressed: () async {
-                CollectionReference users =
-                    FirebaseFirestore.instance.collection('movies');
-                try {
-                  await users
-                      .doc(movie['id'])
-                      .delete()
-                      .then(
-                        (value) => {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Movie deleted successfully'),
-                              duration: Duration(milliseconds: 1500),
-                            ),
-                          ),
-                          Navigator.pushReplacementNamed(
-                              context, "feed_screen"),
-                        },
-                      )
-                      .catchError(
-                          (error) => print("Failed to delete user: $error"));
-                } catch (e) {
-                  print(e);
-                }
-              },
-            )
+                name: 'delete buton',
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title:
+                              Text('Bu içeriği silmek istediğine emin misin?'),
+                          actions: [
+                            ElevatedButton(
+                                onPressed: () async {
+                                  CollectionReference users = FirebaseFirestore
+                                      .instance
+                                      .collection('movies');
+                                  try {
+                                    await users
+                                        .doc(movie['id'])
+                                        .delete()
+                                        .then(
+                                          (value) => {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Movie deleted successfully'),
+                                                duration: Duration(
+                                                    milliseconds: 1500),
+                                              ),
+                                            ),
+                                            Navigator.pushReplacementNamed(
+                                                context, "feed_screen"),
+                                          },
+                                        )
+                                        .catchError((error) => print(
+                                            "Failed to delete user: $error"));
+                                  } catch (e) {
+                                    print(e);
+                                  }
+                                },
+                                child: Text('Evet')),
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Hayır'))
+                          ],
+                        );
+                      });
+                })
           ],
         ),
         body: Form(
