@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:mmovie/widgets/app_buttons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:mmovie/views/edit_movie.dart';
 
 class MovieDetail extends StatefulWidget {
   const MovieDetail({Key? key}) : super(key: key);
@@ -43,6 +44,14 @@ class _MovieDetail extends State<MovieDetail> {
 
     bool _isFavorite = _movie["favorites"].contains(_auth.currentUser!.uid);
     bool _isWishlist = _movie["wishlist"].contains(_auth.currentUser!.uid);
+
+
+    Widget editButton() {
+    return AppButtons.appIconButton(
+        name: 'movie_edit', icon: Icon(Icons.edit), onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => edit_movie(movie:_movie)));
+        });
+  }
 
     void favoriteFunction() async {
       if (_isFavorite) {
@@ -204,12 +213,12 @@ class _MovieDetail extends State<MovieDetail> {
         ),
       ),
     );
+
+
+    
   }
 
-  Widget editButton() {
-    return AppButtons.appIconButton(
-        name: 'movie_edit', icon: Icon(Icons.edit), onPressed: () {});
-  }
+  
 
   String getCategories(List array) {
     String result = "";
