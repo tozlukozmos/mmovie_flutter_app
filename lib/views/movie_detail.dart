@@ -45,13 +45,17 @@ class _MovieDetail extends State<MovieDetail> {
     bool _isFavorite = _movie["favorites"].contains(_auth.currentUser!.uid);
     bool _isWishlist = _movie["wishlist"].contains(_auth.currentUser!.uid);
 
-
     Widget editButton() {
-    return AppButtons.appIconButton(
-        name: 'movie_edit', icon: Icon(Icons.edit), onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => edit_movie(movie:_movie)));
-        });
-  }
+      return AppButtons.appIconButton(
+          name: 'movie_edit',
+          icon: Icon(Icons.edit),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => edit_movie(movie: _movie)));
+          });
+    }
 
     void favoriteFunction() async {
       if (_isFavorite) {
@@ -213,12 +217,7 @@ class _MovieDetail extends State<MovieDetail> {
         ),
       ),
     );
-
-
-    
   }
-
-  
 
   String getCategories(List array) {
     String result = "";
