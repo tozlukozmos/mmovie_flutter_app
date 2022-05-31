@@ -19,7 +19,7 @@ class edit_movie extends StatelessWidget {
   final TextEditingController _categoriesController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
-
+  final TextEditingController _trailerController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     _movieNameController.text = movie["name"];
@@ -29,7 +29,7 @@ class edit_movie extends StatelessWidget {
     _categoriesController.text = getCategories(movie["categories"]);
     _descriptionController.text = movie["description"];
     _imageController.text = movie["image"];
-
+    _trailerController.text = movie["trailer"];
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -127,6 +127,11 @@ class edit_movie extends StatelessWidget {
                 label: "Image URL",
                 controller: _imageController,
               ),
+              const SizedBox(height: 20),
+              AppForm.appTextFormField(
+                label: "Trailer",
+                controller: _trailerController,
+              ),
               const SizedBox(height: 40),
               Row(
                 children: [
@@ -151,7 +156,8 @@ class edit_movie extends StatelessWidget {
                                   .map((e) => e.trim())
                                   .toList(),
                               'description': _descriptionController.text,
-                              'image': _imageController.text
+                              'image': _imageController.text,
+                              'trailer': _trailerController.text
                             })
                             .then(
                               (value) => {
