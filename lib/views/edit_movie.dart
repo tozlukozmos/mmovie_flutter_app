@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
 
-class edit_movie extends StatelessWidget {
-  edit_movie({Key? key, required this.movie}) : super(key: key);
-  final Map movie;
+class EditMovie extends StatelessWidget {
+  EditMovie({Key? key}) : super(key: key);
 
   final CollectionReference _movies =
       FirebaseFirestore.instance.collection('movies');
@@ -20,8 +19,23 @@ class edit_movie extends StatelessWidget {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _trailerController = TextEditingController();
+
+  Map<String, dynamic> _updatedMovie = {
+    "name": "",
+    "year": 0,
+    "rating": 0,
+    "runtime": 0,
+    "categories": [],
+    "description": "",
+    "image": "",
+    "trailer": "",
+  };
+
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    final movie = arg['movie'];
+
     _movieNameController.text = movie["name"];
     _releaseYearController.text = movie["year"].toString();
     _imdbRatingController.text = movie["rating"].toString();
@@ -30,62 +44,126 @@ class edit_movie extends StatelessWidget {
     _descriptionController.text = movie["description"];
     _imageController.text = movie["image"];
     _trailerController.text = movie["trailer"];
+
+    void editMovie() async {
+      try {
+        if (_formKey.currentState!.validate()) {
+          _updatedMovie = {
+            "name": _movieNameController.text,
+            "year": int.parse(_releaseYearController.text),
+            "rating": int.parse(_imdbRatingController.text),
+            "runtime": int.parse(_runtimeController.text),
+            "categories": _categoriesController.text
+                .split(",")
+                .map((e) => e.trim())
+                .toList(),
+            "description": _descriptionController.text,
+            "image": _imageController.text,
+            "trailer": _trailerController.text,
+          };
+          await _movies
+              .doc(movie["id"])
+              .update(_updatedMovie)
+              .then(
+                (value) => {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Movie edited successfully'),
+                      duration: Duration(milliseconds: 1500),
+                    ),
+                  ),
+                  Navigator.pushNamed(context, "feed_screen"),
+                },
+              )
+              .catchError(
+                (error) => {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(error.toString()),
+                      duration: const Duration(milliseconds: 1500),
+                    ),
+                  ),
+                },
+              );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
+      }
+    }
+
+    void deleteMovie() async {
+      try {
+        await _movies
+            .doc(movie["id"])
+            .delete()
+            .then(
+              (value) => {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Movie deleted successfully'),
+                    duration: Duration(milliseconds: 1500),
+                  ),
+                ),
+                Navigator.pushNamed(context, "feed_screen"),
+              },
+            )
+            .catchError(
+              (error) => {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(error.toString()),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                ),
+              },
+            );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
+      }
+    }
+
+    void showMessage() async {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Are you sure for deleting?"),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              AppButtons.appOutlinedButton(
+                name: "Yes, delete",
+                onPressed: deleteMovie,
+              ),
+              AppButtons.appElevatedButton(
+                name: "No, don't delete",
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          );
+        },
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Edit Movie"),
           actions: [
             AppButtons.appIconButton(
-                name: 'delete buton',
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title:
-                              Text('Bu içeriği silmek istediğine emin misin?'),
-                          actions: [
-                            ElevatedButton(
-                                onPressed: () async {
-                                  CollectionReference users = FirebaseFirestore
-                                      .instance
-                                      .collection('movies');
-                                  try {
-                                    await users
-                                        .doc(movie['id'])
-                                        .delete()
-                                        .then(
-                                          (value) => {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    'Movie deleted successfully'),
-                                                duration: Duration(
-                                                    milliseconds: 1500),
-                                              ),
-                                            ),
-                                            Navigator.pushReplacementNamed(
-                                                context, "feed_screen"),
-                                          },
-                                        )
-                                        .catchError((error) => print(
-                                            "Failed to delete user: $error"));
-                                  } catch (e) {
-                                    print(e);
-                                  }
-                                },
-                                child: Text('Evet')),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Hayır'))
-                          ],
-                        );
-                      });
-                })
+              name: 'delete_button',
+              icon: const Icon(Icons.delete),
+              onPressed: showMessage,
+            )
           ],
         ),
         body: Form(
@@ -129,7 +207,7 @@ class edit_movie extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               AppForm.appTextFormField(
-                label: "Trailer",
+                label: "Trailer URL",
                 controller: _trailerController,
               ),
               const SizedBox(height: 40),
@@ -139,42 +217,7 @@ class edit_movie extends StatelessWidget {
                     child: AppButtons.appElevatedButtonIcon(
                       icon: const Icon(Icons.edit),
                       name: "Edit Movie",
-                      onPressed: () async {
-                        CollectionReference movies =
-                            FirebaseFirestore.instance.collection('movies');
-                        print(movie["id"]);
-                        print(_imdbRatingController.text);
-                        await movies
-                            .doc(movie["id"])
-                            .update({
-                              'name': _movieNameController.text,
-                              'year': int.parse(_releaseYearController.text),
-                              'rating': int.parse(_imdbRatingController.text),
-                              'runtime': int.parse(_runtimeController.text),
-                              'categories': _categoriesController.text
-                                  .split(",")
-                                  .map((e) => e.trim())
-                                  .toList(),
-                              'description': _descriptionController.text,
-                              'image': _imageController.text,
-                              'trailer': _trailerController.text
-                            })
-                            .then(
-                              (value) => {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Movie edited successfully'),
-                                    duration: Duration(milliseconds: 1500),
-                                  ),
-                                ),
-                                Navigator.pushReplacementNamed(
-                                    context, "feed_screen"),
-                              },
-                            )
-                            .catchError((error) =>
-                                print("Failed to update user: $error"));
-                        Navigator.pushNamed(context, "feed_screen");
-                      },
+                      onPressed: editMovie,
                     ),
                   ),
                 ],
@@ -197,16 +240,4 @@ class edit_movie extends StatelessWidget {
     }
     return result;
   }
-
-  /*@override
-  void dispose() {
-    _movieNameController.dispose();
-    _releaseYearController.dispose();
-    _imdbRatingController.dispose();
-    _categoriesController.dispose();
-    _descriptionController.dispose();
-    _imageController.dispose();
-    super.dispose();
-  }*/
-
 }

@@ -11,6 +11,7 @@ import '../views/see_more.dart';
 import '../views/signup.dart';
 import '../views/welcome.dart';
 import '../views/wishlist.dart';
+import '../views/edit_movie.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   'welcome_screen': (context) => const Welcome(),
@@ -24,4 +25,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   'wishlist_screen': (context) => const Wishlist(),
   'search_screen': (context) => const Search(),
   'about_screen': (context) => const About(),
+  'edit_movie_screen': (context) => EditMovie(),
 };
