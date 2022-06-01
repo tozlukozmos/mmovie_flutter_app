@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:mmovie/widgets/app_buttons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-// import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetail extends StatefulWidget {
   const MovieDetail({Key? key}) : super(key: key);
@@ -45,12 +45,12 @@ class _MovieDetail extends State<MovieDetail> {
     final _movie = arg['movie'];
     url = _movie['trailer'];
 
-    // YoutubePlayerController _controller = YoutubePlayerController(
-    //     initialVideoId: YoutubePlayer.convertUrlToId(url)!,
-    //     flags: YoutubePlayerFlags(
-    //       autoPlay: false,
-    //       mute: false,
-    //     ));
+     YoutubePlayerController _controller = YoutubePlayerController(
+         initialVideoId: YoutubePlayer.convertUrlToId(url) ?? "Rv6rR5xOBDE",
+         flags: const YoutubePlayerFlags(
+           autoPlay: false,
+           mute: false,
+         ));
 
     bool _isFavorite = _movie["favorites"].contains(_auth.currentUser!.uid);
     bool _isWishlist = _movie["wishlist"].contains(_auth.currentUser!.uid);
@@ -221,13 +221,13 @@ class _MovieDetail extends State<MovieDetail> {
             const SizedBox(height: 20),
             Text(_movie['description'], style: const TextStyle(height: 1.5)),
             const SizedBox(height: 30),
-            Text('Trailer', style: TextStyle(fontSize: 20)),
+            const Text('Trailer', style: TextStyle(fontSize: 20)),
             const SizedBox(height: 30),
-            // YoutubePlayer(
-            //   controller: _controller,
-            //   showVideoProgressIndicator: true,
-            //   progressIndicatorColor: Colors.blue,
-            // )
+             YoutubePlayer(
+               controller: _controller,
+               showVideoProgressIndicator: true,
+               progressIndicatorColor: Colors.blue,
+             )
           ],
         ),
       ),
@@ -254,16 +254,6 @@ class _MovieDetail extends State<MovieDetail> {
       return "$hour h";
     } else {
       return "$hour h $minute m";
-    }
-  }
-
-  Color getRatingColor(number) {
-    if (number >= 70) {
-      return Colors.green;
-    } else if (number >= 50) {
-      return Colors.yellow;
-    } else {
-      return Colors.red;
     }
   }
 }
