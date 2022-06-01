@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class About extends StatelessWidget {
   const About({Key? key}) : super(key: key);
-  final String about = "I have been living some difficulties when my cousins," +
+  final String about = "I have been experiencing some difficulties when my cousins," +
       " friends, and siblings suggesting a movie to me, such as forgetting and" +
       " missing messages. Thanks to the application we may have a digital movie" +
       " archive, and we can share movies in easier way, we can create wish list" +
@@ -22,7 +22,8 @@ class About extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Text("MMovie ", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text("MMovie ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   Icon(Icons.copyright_rounded),
                   Text(" 2022", style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
