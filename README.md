@@ -1,5 +1,5 @@
 # MMovie Flutter App
-I have been living some difficulties when my cousins, friends, and siblings suggesting a movie to me, such as forgetting and missing messages. Thanks to the application we may have a digital movie archive, and we can share movies in easier way, we can create wish list and favourites list. I hope it would work as expected.
+I have been experiencing some difficulties when my cousins, friends, and siblings suggesting a movie to me, such as forgetting and missing messages. Thanks to the application we may have a digital movie archive, and we can share movies in easier way, we can create wish list and favourites list. I hope it would work as expected.
 
 <br/>
 

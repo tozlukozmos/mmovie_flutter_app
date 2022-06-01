@@ -23,7 +23,7 @@ class _AddMovie extends State<AddMovie> {
   final TextEditingController _categoriesController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
-
+  final TextEditingController _trailerController = TextEditingController();
   Map<String, dynamic> _newMovie = {
     "name": "",
     "year": 0,
@@ -34,6 +34,7 @@ class _AddMovie extends State<AddMovie> {
     "wishlist": [],
     "description": "",
     "image": "",
+    "trailer": "",
   };
 
   @override
@@ -80,6 +81,11 @@ class _AddMovie extends State<AddMovie> {
                 label: "Image URL",
                 controller: _imageController,
               ),
+              const SizedBox(height: 20),
+              AppForm.appTextFormField(
+                label: "Trailer",
+                controller: _trailerController,
+              ),
               const SizedBox(height: 40),
               Row(
                 children: [
@@ -113,6 +119,7 @@ class _AddMovie extends State<AddMovie> {
           "wishlist": [],
           "description": _descriptionController.text,
           "image": _imageController.text,
+          "trailer": _trailerController.text,
         };
         await _movies
             .add(_newMovie)
@@ -156,6 +163,7 @@ class _AddMovie extends State<AddMovie> {
     _categoriesController.dispose();
     _descriptionController.dispose();
     _imageController.dispose();
+    _trailerController.dispose();
     super.dispose();
   }
 }

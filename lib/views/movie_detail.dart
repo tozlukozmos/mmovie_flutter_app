@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:mmovie/widgets/app_buttons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:mmovie/views/edit_movie.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetail extends StatefulWidget {
   const MovieDetail({Key? key}) : super(key: key);
@@ -16,17 +18,55 @@ class MovieDetail extends StatefulWidget {
 }
 
 class _MovieDetail extends State<MovieDetail> {
+  late String url ;
+
   final _auth = FirebaseAuth.instance;
   final CollectionReference _movies =
       FirebaseFirestore.instance.collection('movies');
+
+  List<String> admins = [
+    "furkan@gmail.com",
+    "omer@gmail.com",
+    "abdulkadir@gmail.com"
+  ];
+
+  bool checkUser() {
+    String user = _auth.currentUser!.email.toString();
+
+    if (admins.contains(user)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     final _movie = arg['movie'];
+    url = _movie['trailer'];
+
+    YoutubePlayerController _controller = YoutubePlayerController(
+        initialVideoId: YoutubePlayer.convertUrlToId(url)!,
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+        ));
 
     bool _isFavorite = _movie["favorites"].contains(_auth.currentUser!.uid);
     bool _isWishlist = _movie["wishlist"].contains(_auth.currentUser!.uid);
+
+    Widget editButton() {
+      return AppButtons.appIconButton(
+          name: 'movie_edit',
+          icon: Icon(Icons.edit),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => edit_movie(movie: _movie)));
+          });
+    }
 
     void favoriteFunction() async {
       if (_isFavorite) {
@@ -85,6 +125,7 @@ class _MovieDetail extends State<MovieDetail> {
         appBar: AppBar(
           title: const Text("Details"),
           actions: [
+            checkUser() ? editButton() : Text(''),
             AppButtons.appIconButton(
               name: "share_movie",
               icon: const Icon(Icons.share),
@@ -183,6 +224,13 @@ class _MovieDetail extends State<MovieDetail> {
             const SizedBox(height: 20),
             Text(_movie['description'], style: const TextStyle(height: 1.5)),
             const SizedBox(height: 30),
+            Text('Trailer', style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 30),
+            YoutubePlayer(
+              controller: _controller,
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.blue,
+            )
           ],
         ),
       ),
