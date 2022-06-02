@@ -45,12 +45,12 @@ class _MovieDetail extends State<MovieDetail> {
     final _movie = arg['movie'];
     url = _movie['trailer'];
 
-     YoutubePlayerController _controller = YoutubePlayerController(
-         initialVideoId: YoutubePlayer.convertUrlToId(url) ?? "Rv6rR5xOBDE",
-         flags: const YoutubePlayerFlags(
-           autoPlay: false,
-           mute: false,
-         ));
+    YoutubePlayerController _controller = YoutubePlayerController(
+        initialVideoId: YoutubePlayer.convertUrlToId(url) ?? "Rv6rR5xOBDE",
+        flags: const YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+        ));
 
     bool _isFavorite = _movie["favorites"].contains(_auth.currentUser!.uid);
     bool _isWishlist = _movie["wishlist"].contains(_auth.currentUser!.uid);
@@ -223,11 +223,11 @@ class _MovieDetail extends State<MovieDetail> {
             const SizedBox(height: 30),
             const Text('Trailer', style: TextStyle(fontSize: 20)),
             const SizedBox(height: 30),
-             YoutubePlayer(
-               controller: _controller,
-               showVideoProgressIndicator: true,
-               progressIndicatorColor: Colors.blue,
-             )
+            YoutubePlayer(
+              controller: _controller,
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.blue,
+            )
           ],
         ),
       ),
