@@ -46,7 +46,7 @@ class _MovieDetail extends State<MovieDetail> {
     url = _movie['trailer'];
 
     YoutubePlayerController _controller = YoutubePlayerController(
-        initialVideoId: YoutubePlayer.convertUrlToId(url) ?? "Rv6rR5xOBDE",
+        initialVideoId: YoutubePlayer.convertUrlToId(url) ?? "q8LqhYtJzP0",
         flags: const YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
