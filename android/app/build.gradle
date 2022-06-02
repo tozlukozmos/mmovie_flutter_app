@@ -52,9 +52,6 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.mmovie"
         targetSdkVersion 31
-        //minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        2a229f308c19ae2d5a87d7ee85b2742a877729a6
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
