@@ -137,7 +137,8 @@ class EditMovie extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Are you sure for deleting?"),
+            title: const Text("Delete movie", textAlign: TextAlign.center),
+            content: const Text("You're going to delete the movie,\nare you sure?", textAlign: TextAlign.center),
             actionsAlignment: MainAxisAlignment.center,
             actions: [
               AppButtons.appOutlinedButton(
@@ -161,7 +162,7 @@ class EditMovie extends StatelessWidget {
           actions: [
             AppButtons.appIconButton(
               name: 'delete_button',
-              icon: const Icon(Icons.delete),
+              icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: showMessage,
             )
           ],

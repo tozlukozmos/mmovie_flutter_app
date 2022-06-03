@@ -4,10 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mmovie/widgets/app_buttons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../widgets/app_buttons.dart';
 
 class MovieDetail extends StatefulWidget {
   const MovieDetail({Key? key}) : super(key: key);
@@ -17,8 +18,6 @@ class MovieDetail extends StatefulWidget {
 }
 
 class _MovieDetail extends State<MovieDetail> {
-  late String url;
-
   final _auth = FirebaseAuth.instance;
   final CollectionReference _movies =
       FirebaseFirestore.instance.collection('movies');
@@ -29,41 +28,24 @@ class _MovieDetail extends State<MovieDetail> {
     "abdulkadir@gmail.com"
   ];
 
-  bool checkUser() {
-    String user = _auth.currentUser!.email.toString();
-
-    if (admins.contains(user)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     final _movie = arg['movie'];
-    url = _movie['trailer'];
+    final String url = _movie['trailer'];
+
+    String userEmail = _auth.currentUser!.email.toString();
 
     YoutubePlayerController _controller = YoutubePlayerController(
-        initialVideoId: YoutubePlayer.convertUrlToId(url) ?? "q8LqhYtJzP0",
-        flags: const YoutubePlayerFlags(
-          autoPlay: false,
-          mute: false,
-        ));
+      initialVideoId: YoutubePlayer.convertUrlToId(url) ?? "q8LqhYtJzP0",
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
 
     bool _isFavorite = _movie["favorites"].contains(_auth.currentUser!.uid);
     bool _isWishlist = _movie["wishlist"].contains(_auth.currentUser!.uid);
-
-    Widget editButton() {
-      return AppButtons.appIconButton(
-          name: 'movie_edit',
-          icon: Icon(Icons.edit),
-          onPressed: () {
-            Navigator.pushNamed(context, 'edit_movie_screen',
-                arguments: {'movie': _movie});
-          });
-    }
 
     void favoriteFunction() async {
       if (_isFavorite) {
@@ -117,36 +99,46 @@ class _MovieDetail extends State<MovieDetail> {
       }
     }
 
+    void shareMovie() async {
+      final box = context.findRenderObject() as RenderBox?;
+      String title = _movie["name"] +
+          " (" +
+          _movie["year"].toString() +
+          ") " +
+          "IMDB: " +
+          (_movie["rating"] / 10).toString();
+      final url = Uri.parse(_movie["image"]);
+      final response = await http.get(url);
+      final bytes = response.bodyBytes;
+
+      final temp = await getTemporaryDirectory();
+      final path = '${temp.path}/image.jpg';
+      File(path).writeAsBytesSync(bytes);
+
+      await Share.shareFiles([path],
+          text: title,
+          sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Details"),
           actions: [
-            checkUser() ? editButton() : Text(''),
+            admins.contains(userEmail)
+                ? AppButtons.appIconButton(
+                    name: 'movie_edit',
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'edit_movie_screen',
+                          arguments: {'movie': _movie});
+                    },
+                  )
+                : const Text(""),
             AppButtons.appIconButton(
               name: "share_movie",
               icon: const Icon(Icons.share),
-              onPressed: () async {
-                final box = context.findRenderObject() as RenderBox?;
-                String title = _movie["name"] +
-                    " (" +
-                    _movie["year"].toString() +
-                    ") " +
-                    "IMDB: " +
-                    (_movie["rating"] / 10).toString();
-                final url = Uri.parse(_movie["image"]);
-                final response = await http.get(url);
-                final bytes = response.bodyBytes;
-
-                final temp = await getTemporaryDirectory();
-                final path = '${temp.path}/image.jpg';
-                File(path).writeAsBytesSync(bytes);
-
-                await Share.shareFiles([path],
-                    text: title,
-                    sharePositionOrigin:
-                        box!.localToGlobal(Offset.zero) & box.size);
-              },
+              onPressed: shareMovie,
             )
           ],
         ),
