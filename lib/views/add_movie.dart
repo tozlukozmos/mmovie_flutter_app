@@ -58,7 +58,7 @@ class _AddMovie extends State<AddMovie> {
                 ),
                 Tab(
                   icon: Icon(Icons.link_off),
-                  text: "Movie details",
+                  text: "Movie Details",
                 ),
               ],
             ),
@@ -100,17 +100,17 @@ class _AddMovie extends State<AddMovie> {
                   padding: const EdgeInsets.all(20),
                   children: [
                     AppForm.appTextFormField(
-                      label: "Movie name",
+                      label: "Movie Name",
                       controller: _movieNameController,
                     ),
                     const SizedBox(height: 20),
                     AppForm.appTextFormField(
-                      label: "Release year",
+                      label: "Release Year",
                       controller: _releaseYearController,
                     ),
                     const SizedBox(height: 20),
                     AppForm.appTextFormField(
-                      label: "IMDB rating",
+                      label: "IMDB Rating",
                       controller: _imdbRatingController,
                     ),
                     const SizedBox(height: 20),
@@ -135,7 +135,7 @@ class _AddMovie extends State<AddMovie> {
                     ),
                     const SizedBox(height: 20),
                     AppForm.appTextFormField(
-                      label: "Trailer",
+                      label: "Trailer URL",
                       controller: _trailerController,
                     ),
                     const SizedBox(height: 40),

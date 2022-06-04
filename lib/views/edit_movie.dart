@@ -173,17 +173,17 @@ class EditMovie extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             children: [
               AppForm.appTextFormField(
-                label: "Movie name",
+                label: "Movie Name",
                 controller: _movieNameController,
               ),
               const SizedBox(height: 20),
               AppForm.appTextFormField(
-                label: "Release year",
+                label: "Release Year",
                 controller: _releaseYearController,
               ),
               const SizedBox(height: 20),
               AppForm.appTextFormField(
-                label: "IMDB rating",
+                label: "IMDB Rating",
                 controller: _imdbRatingController,
               ),
               const SizedBox(height: 20),
