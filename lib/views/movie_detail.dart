@@ -58,7 +58,16 @@ class _MovieDetail extends State<MovieDetail> {
                     _isFavorite = !_isFavorite;
                   }),
                 })
-            .catchError((error) => print("Failed to update movie: $error"));
+            .catchError(
+              (error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Failed to update movie: $error"),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                );
+              },
+            );
       } else {
         _movie["favorites"].add(_auth.currentUser!.uid);
         await _movies
@@ -69,7 +78,16 @@ class _MovieDetail extends State<MovieDetail> {
                     _isFavorite = !_isFavorite;
                   }),
                 })
-            .catchError((error) => print("Failed to update movie: $error"));
+            .catchError(
+              (error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Failed to update movie: $error"),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                );
+              },
+            );
       }
     }
 
@@ -84,7 +102,16 @@ class _MovieDetail extends State<MovieDetail> {
                     _isWishlist = !_isWishlist;
                   }),
                 })
-            .catchError((error) => print("Failed to update movie: $error"));
+            .catchError(
+              (error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Failed to update movie: $error"),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                );
+              },
+            );
       } else {
         _movie["wishlist"].add(_auth.currentUser!.uid);
         await _movies
@@ -95,7 +122,16 @@ class _MovieDetail extends State<MovieDetail> {
                     _isWishlist = !_isWishlist;
                   }),
                 })
-            .catchError((error) => print("Failed to update movie: $error"));
+            .catchError(
+              (error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Failed to update movie: $error"),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                );
+              },
+            );
       }
     }
 
@@ -120,107 +156,111 @@ class _MovieDetail extends State<MovieDetail> {
           sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
     }
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Details"),
-          actions: [
-            admins.contains(userEmail)
-                ? AppButtons.appIconButton(
-                    name: 'movie_edit',
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'edit_movie_screen',
-                          arguments: {'movie': _movie});
-                    },
-                  )
-                : const Text(""),
-            AppButtons.appIconButton(
-              name: "share_movie",
-              icon: const Icon(Icons.share),
-              onPressed: shareMovie,
-            )
-          ],
-        ),
-        body: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Center(
-              child: Text(
-                _movie['name'],
-                style: const TextStyle(fontSize: 20),
-              ),
-            ),
-            const SizedBox(height: 20),
-            AspectRatio(
-              aspectRatio: 2 / 3,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Image.network(
-                  _movie['image'],
-                  width: double.infinity,
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.blue,
+      ),
+      builder: (context, player) => SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Details"),
+            actions: [
+              admins.contains(userEmail)
+                  ? AppButtons.appIconButton(
+                      name: 'movie_edit',
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'edit_movie_screen',
+                            arguments: {'movie': _movie});
+                      },
+                    )
+                  : const Text(""),
+              AppButtons.appIconButton(
+                name: "share_movie",
+                icon: const Icon(Icons.share),
+                onPressed: shareMovie,
+              )
+            ],
+          ),
+          body: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              Center(
+                child: Text(
+                  _movie['name'],
+                  style: const TextStyle(fontSize: 20),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_month_rounded),
-                    const SizedBox(width: 5),
-                    Text(_movie["year"].toString()),
-                  ],
+              const SizedBox(height: 20),
+              AspectRatio(
+                aspectRatio: 2 / 3,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.network(
+                    _movie['image'],
+                    width: double.infinity,
+                  ),
                 ),
-                const SizedBox(width: 20),
-                Row(
-                  children: [
-                    const Icon(Icons.access_time_rounded),
-                    const SizedBox(width: 5),
-                    Text(getDuration(_movie["runtime"])),
-                  ],
-                ),
-                const SizedBox(width: 20),
-                Row(
-                  children: [
-                    const Icon(Icons.star_rate_rounded),
-                    const SizedBox(width: 5),
-                    Text((_movie["rating"] / 10).toString()),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Center(child: Text(getCategories(_movie['categories']))),
-            const SizedBox(height: 30),
-            AppButtons.appElevatedButtonIcon(
-              name: _isFavorite ? "Remove from favorites" : "Add to favorites",
-              icon: _isFavorite
-                  ? const Icon(Icons.favorite_rounded)
-                  : const Icon(Icons.favorite_border_rounded),
-              onPressed: favoriteFunction,
-            ),
-            AppButtons.appOutlinedButtonIcon(
-              name: _isWishlist ? "Remove from wishlist" : "Add to wishlist",
-              icon: _isWishlist
-                  ? const Icon(Icons.bookmark_rounded)
-                  : const Icon(Icons.bookmark_outline_rounded),
-              onPressed: wishlistFunction,
-            ),
-            const SizedBox(height: 30),
-            const Text("Description", style: TextStyle(fontSize: 20)),
-            const SizedBox(height: 20),
-            Text(_movie['description'], style: const TextStyle(height: 1.5)),
-            const SizedBox(height: 30),
-            const Text('Trailer', style: TextStyle(fontSize: 20)),
-            const SizedBox(height: 30),
-            YoutubePlayer(
-              controller: _controller,
-              showVideoProgressIndicator: true,
-              progressIndicatorColor: Colors.blue,
-            )
-          ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_month_rounded),
+                      const SizedBox(width: 5),
+                      Text(_movie["year"].toString()),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time_rounded),
+                      const SizedBox(width: 5),
+                      Text(getDuration(_movie["runtime"])),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  Row(
+                    children: [
+                      const Icon(Icons.star_rate_rounded),
+                      const SizedBox(width: 5),
+                      Text((_movie["rating"] / 10).toString()),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Center(child: Text(getCategories(_movie['categories']))),
+              const SizedBox(height: 30),
+              AppButtons.appElevatedButtonIcon(
+                name:
+                    _isFavorite ? "Remove from favorites" : "Add to favorites",
+                icon: _isFavorite
+                    ? const Icon(Icons.favorite_rounded)
+                    : const Icon(Icons.favorite_border_rounded),
+                onPressed: favoriteFunction,
+              ),
+              AppButtons.appOutlinedButtonIcon(
+                name: _isWishlist ? "Remove from wishlist" : "Add to wishlist",
+                icon: _isWishlist
+                    ? const Icon(Icons.bookmark_rounded)
+                    : const Icon(Icons.bookmark_outline_rounded),
+                onPressed: wishlistFunction,
+              ),
+              const SizedBox(height: 30),
+              const Text("Description", style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 20),
+              Text(_movie['description'], style: const TextStyle(height: 1.5)),
+              const SizedBox(height: 30),
+              const Text('Trailer', style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 30),
+              player,
+            ],
+          ),
         ),
       ),
     );
