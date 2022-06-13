@@ -221,43 +221,59 @@ class _AddMovie extends State<AddMovie> {
         final body = res.body;
         final document = parser.parse(body);
         var response = document.getElementById("original_header");
-        String? image = response!.children[0].children[0].children[0].children[0].attributes['data-srcset'];
+        String? image = response!.children[0].children[0].children[0]
+            .children[0].attributes['data-srcset'];
 
         _newMovie = {
-          "name": response.children[1].children[0].children[0].children[0].children[0].text,
-          "year": int.parse(response.children[1].children[0].children[0].children[0].children[1].text.substring(1,5)),
+          "name": response
+              .children[1].children[0].children[0].children[0].children[0].text,
+          "year": int.parse(response
+              .children[1].children[0].children[0].children[0].children[1].text
+              .substring(1, 5)),
           "rating": int.parse(_imdbRatingController.text),
-          "runtime": convertToMinutes(response.children[1].children[0].children[0].children[1].children[3].text.trim()),
-          "categories": response.children[1].children[0].children[0].children[1].children[2].children.map((e) => e.text).toList(),
+          "runtime": convertToMinutes(response
+              .children[1].children[0].children[0].children[1].children[3].text
+              .trim()),
+          "categories": response.children[1].children[0].children[0].children[1]
+              .children[2].children
+              .map((e) => e.text)
+              .toList(),
           "favorites": [],
           "wishlist": [],
-          "description": response.children[1].children[0].children[2].children[2].children[0].text,
-          "image": 'https://image.tmdb.org/' + image!.substring(image.indexOf(",")+1, image.indexOf("2x")-1).trim(),
-          "trailer": 'https://www.youtube.com/watch?v=' + response.children[1].children[0].children[1].children[5].children[0].attributes["data-id"].toString(),
+          "description": response
+              .children[1].children[0].children[2].children[2].children[0].text,
+          "image": 'https://image.tmdb.org/' +
+              image!
+                  .substring(image.indexOf(",") + 1, image.indexOf("2x") - 1)
+                  .trim(),
+          "trailer": 'https://www.youtube.com/watch?v=' +
+              response.children[1].children[0].children[1].children[5]
+                  .children[0].attributes["data-id"]
+                  .toString(),
         };
         await _movies
             .add(_newMovie)
             .then(
               (value) => {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Movie added successfully'),
-                duration: Duration(milliseconds: 1500),
-              ),
-            ),
-            Navigator.pushReplacementNamed(context, "feed_screen"),
-          },
-        )
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Movie added successfully'),
+                    duration: Duration(milliseconds: 1500),
+                  ),
+                ),
+                Navigator.pushReplacementNamed(context, "feed_screen"),
+              },
+            )
             .catchError(
               (error) => {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(error.toString()),
-                duration: const Duration(milliseconds: 1500),
-              ),
-            ),
-          },
-        );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(error.toString()),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                ),
+              },
+            );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -269,10 +285,11 @@ class _AddMovie extends State<AddMovie> {
     }
   }
 
-  int convertToMinutes(String runtime){
+  int convertToMinutes(String runtime) {
     int hour = int.parse(runtime.substring(0, runtime.indexOf("h")));
-    int minutes = int.parse(runtime.substring(runtime.indexOf("h")+1, runtime.indexOf("m")));
-    int result = hour*60+minutes;
+    int minutes = int.parse(
+        runtime.substring(runtime.indexOf("h") + 1, runtime.indexOf("m")));
+    int result = hour * 60 + minutes;
     return result;
   }
 
