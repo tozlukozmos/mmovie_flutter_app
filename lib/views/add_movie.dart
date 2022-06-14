@@ -20,6 +20,7 @@ class _AddMovie extends State<AddMovie> {
 
   final _formKey = GlobalKey<FormState>();
   final _formURLKey = GlobalKey<FormState>();
+  // ignore: non_constant_identifier_names
   final TextEditingController _TMDMovieURLController = TextEditingController();
   final TextEditingController _movieNameController = TextEditingController();
   final TextEditingController _releaseYearController = TextEditingController();
@@ -37,9 +38,15 @@ class _AddMovie extends State<AddMovie> {
     "categories": [],
     "favorites": [],
     "wishlist": [],
+    "casts": [],
     "description": "",
     "image": "",
     "trailer": "",
+  };
+  Map<String, dynamic> _newMovieCast = {
+    "fullname": "",
+    "actor-name": "",
+    "image": "",
   };
 
   @override
@@ -54,7 +61,7 @@ class _AddMovie extends State<AddMovie> {
               tabs: [
                 Tab(
                   icon: Icon(Icons.link),
-                  text: "TMD Movie URL",
+                  text: "TMDB Movie URL",
                 ),
                 Tab(
                   icon: Icon(Icons.link_off),
@@ -71,7 +78,7 @@ class _AddMovie extends State<AddMovie> {
                   padding: const EdgeInsets.all(20),
                   children: [
                     AppForm.appTextFormField(
-                      label: "TMD Movie URL",
+                      label: "TMDB Movie URL",
                       controller: _TMDMovieURLController,
                     ),
                     const SizedBox(height: 20),
@@ -177,6 +184,7 @@ class _AddMovie extends State<AddMovie> {
           "description": _descriptionController.text,
           "image": _imageController.text,
           "trailer": _trailerController.text,
+          "created": DateTime.now(),
         };
         await _movies
             .add(_newMovie)
@@ -216,40 +224,94 @@ class _AddMovie extends State<AddMovie> {
     try {
       if (_formURLKey.currentState!.validate()) {
         Uri url = Uri.parse(_TMDMovieURLController.text);
+        List casts = [];
 
         var res = await http.get(url);
         final body = res.body;
         final document = parser.parse(body);
-        var response = document.getElementById("original_header");
-        String? image = response!.children[0].children[0].children[0]
+        var responseMovies = document.getElementById("original_header");
+        var responseCasts = document.getElementsByClassName("white_column");
+
+        String? imageMovie = responseMovies!.children[0].children[0].children[0]
             .children[0].attributes['data-srcset'];
+        var _casts =
+            responseCasts[0].children[0].children[1].children[0].children;
+
+        for (int i = 0; i < _casts.length - 1; i++) {
+          String? imageCast =
+              _casts[i].children[0].children[0].attributes["srcset"];
+          _newMovieCast = {
+            'image': 'https://image.tmdb.org/' +
+                imageCast!
+                    .substring(
+                        imageCast.indexOf(",") + 1, imageCast.indexOf("2x") - 1)
+                    .trim(),
+            'fullname': _casts[i].children[1].text,
+            'actor-name': _casts[i].children[2].text,
+          };
+          casts.add(_newMovieCast);
+        }
+
+        // print("name: " +
+        //     response.children[1].children[0].children[0].children[0].children[0]
+        //         .text);
+        // print("year: " +
+        //     response.children[1].children[0].children[0].children[0].children[1]
+        //         .text
+        //         .substring(1, 5));
+        // print("rating: " + _imdbRatingController.text);
+        // print("runtime: 180");
+
+        // print("categories: " +
+        //     response.children[1].children[0].children[0].children[1].children[2]
+        //         .children
+        //         .map((e) => e.text)
+        //         .toList()
+        //         .toString());
+
+        // print("description: " +
+        //     response.children[1].children[0].children[2].children[2].children[0]
+        //         .text);
+        // print("image: " +
+        //     'https://image.tmdb.org/' +
+        //     image!
+        //         .substring(image.indexOf(",") + 1, image.indexOf("2x") - 1)
+        //         .trim());
+        // print("trailer: " +
+        //     'https://www.youtube.com/watch?v=' +
+        //     response.children[1].children[0].children[1].children[5].children[0]
+        //         .attributes["data-id"]
+        //         .toString());
 
         _newMovie = {
-          "name": response
+          "name": responseMovies
               .children[1].children[0].children[0].children[0].children[0].text,
-          "year": int.parse(response
+          "year": int.parse(responseMovies
               .children[1].children[0].children[0].children[0].children[1].text
               .substring(1, 5)),
           "rating": int.parse(_imdbRatingController.text),
-          "runtime": convertToMinutes(response
+          "runtime": convertToMinutes(responseMovies
               .children[1].children[0].children[0].children[1].children[3].text
               .trim()),
-          "categories": response.children[1].children[0].children[0].children[1]
-              .children[2].children
+          "categories": responseMovies.children[1].children[0].children[0]
+              .children[1].children[2].children
               .map((e) => e.text)
               .toList(),
           "favorites": [],
           "wishlist": [],
-          "description": response
+          "description": responseMovies
               .children[1].children[0].children[2].children[2].children[0].text,
           "image": 'https://image.tmdb.org/' +
-              image!
-                  .substring(image.indexOf(",") + 1, image.indexOf("2x") - 1)
+              imageMovie!
+                  .substring(
+                      imageMovie.indexOf(",") + 1, imageMovie.indexOf("2x") - 1)
                   .trim(),
           "trailer": 'https://www.youtube.com/watch?v=' +
-              response.children[1].children[0].children[1].children[5]
+              responseMovies.children[1].children[0].children[1].children[5]
                   .children[0].attributes["data-id"]
                   .toString(),
+          "casts": casts,
+          "created": DateTime.now(),
         };
         await _movies
             .add(_newMovie)
@@ -268,7 +330,7 @@ class _AddMovie extends State<AddMovie> {
               (error) => {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(error.toString()),
+                    content: Text("world" + error.toString()),
                     duration: const Duration(milliseconds: 1500),
                   ),
                 ),
@@ -278,7 +340,7 @@ class _AddMovie extends State<AddMovie> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text("hello" + e.toString()),
           duration: const Duration(milliseconds: 1500),
         ),
       );
@@ -286,9 +348,19 @@ class _AddMovie extends State<AddMovie> {
   }
 
   int convertToMinutes(String runtime) {
-    int hour = int.parse(runtime.substring(0, runtime.indexOf("h")));
-    int minutes = int.parse(
-        runtime.substring(runtime.indexOf("h") + 1, runtime.indexOf("m")));
+    int hour = 0;
+    int minutes = 0;
+
+    if (runtime.contains("m") && !runtime.contains("h")) {
+      minutes = int.parse(runtime.substring(0, runtime.indexOf("m")));
+    } else if (!runtime.contains("m") && runtime.contains("h")) {
+      hour = int.parse(runtime.substring(0, runtime.indexOf("h")));
+    } else {
+      hour = int.parse(runtime.substring(0, runtime.indexOf("h")));
+      minutes = int.parse(
+          runtime.substring(runtime.indexOf("h") + 1, runtime.indexOf("m")));
+    }
+
     int result = hour * 60 + minutes;
     return result;
   }
