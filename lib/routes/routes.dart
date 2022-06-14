@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../views/about.dart';
+import '../views/cast_movies.dart';
 import '../views/search.dart';
 import '../views/add_movie.dart';
 import '../views/favorites.dart';
@@ -26,4 +27,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   'search_screen': (context) => const Search(),
   'about_screen': (context) => const About(),
   'edit_movie_screen': (context) => EditMovie(),
+  'cast_movies_screen': (context) => const CastMovies(),
 };
