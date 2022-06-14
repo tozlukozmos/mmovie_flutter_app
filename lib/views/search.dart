@@ -26,7 +26,7 @@ class _Search extends State<Search> {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
               child: AppForm.appSearchField(
-                hint: "Search all movies...",
+                hint: "Search by movie name or category",
                 controller: _searchController,
                 onChanged: (String value) {
                   setState(() {
@@ -56,10 +56,12 @@ class _Search extends State<Search> {
                   //search algorithm
                   List movies = snapshot.data!.docs.map((doc) => doc).toList();
                   movies = movies
-                      .where((s) => s['name']
-                          .toLowerCase()
-                          .contains(_searchQuery.toLowerCase()))
+                      .where((s) => (s['name']
+                              .toLowerCase()
+                              .contains(_searchQuery.toLowerCase()) ||
+                          searchCategory(s["categories"], _searchQuery)))
                       .toList();
+
                   return Column(
                     children: movies.map((e) {
                       Map<String, dynamic> movie =
@@ -79,6 +81,28 @@ class _Search extends State<Search> {
       ),
     );
   }
+
+  bool searchCategory(categories, searchQuery) {
+    bool result = false;
+    for (int i = 0; i < categories.length; i++) {
+      if (categories[i].toLowerCase().contains(searchQuery.toLowerCase())) {
+        result = true;
+      }
+    }
+    return result;
+  }
+
+  // bool searchActor(casts, searchQuery) {
+  //   bool result = false;
+  //   for (int i = 0; i < casts.length; i++) {
+  //     if (casts[i]["fullname"]
+  //         .toLowerCase()
+  //         .contains(searchQuery.toLowerCase())) {
+  //       result = true;
+  //     }
+  //   }
+  //   return result;
+  // }
 
   @override
   void dispose() {
