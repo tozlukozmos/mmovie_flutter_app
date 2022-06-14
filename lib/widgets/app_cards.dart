@@ -28,7 +28,10 @@ class AppCards {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [ThemeData.dark().primaryColorDark, Colors.transparent],
+                        colors: [
+                          ThemeData.dark().primaryColorDark,
+                          Colors.transparent
+                        ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
@@ -103,6 +106,72 @@ class AppCards {
           'movie': movie,
         }),
       },
+    );
+  }
+
+  static Widget castCard({
+    required Map cast,
+    required BuildContext context,
+  }) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.pushNamed(context, 'cast_movies_screen',
+            arguments: {'cast': cast}),
+      },
+      child: Card(
+          margin: const EdgeInsets.only(right: 15),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.network(
+                  cast['image'],
+                  width: 150,
+                  height: 225,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
+                child: Align(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          ThemeData.dark().primaryColorDark,
+                          Colors.transparent
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 10,
+                bottom: 30,
+                width: 130,
+                child: Text(
+                  cast["fullname"],
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 10,
+                bottom: 10,
+                width: 185,
+                child: Text(
+                  cast["actor-name"],
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 10),
+                ),
+              ),
+            ],
+          )),
     );
   }
 }

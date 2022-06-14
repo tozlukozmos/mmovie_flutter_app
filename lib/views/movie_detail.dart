@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mmovie/widgets/app_cards.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -20,6 +21,15 @@ class MovieDetail extends StatefulWidget {
 class _MovieDetail extends State<MovieDetail> {
   final _auth = FirebaseAuth.instance;
   final _movies = FirebaseFirestore.instance.collection('movies');
+
+  // Map cast = {
+  //   'fullname': "Leonardo DiCaprio",
+  //   'movie-name': "Dom Cobb",
+  //   'image':
+  //       "https://image.tmdb.org//t/p/w276_and_h350_face/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg",
+  // };
+
+  // List casts = [];
 
   List admins = [];
 
@@ -45,6 +55,7 @@ class _MovieDetail extends State<MovieDetail> {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     final _movie = arg['movie'];
     final String url = _movie['trailer'];
+    List casts = _movie["casts"] ?? [];
 
     String userEmail = _auth.currentUser!.email.toString();
 
@@ -270,6 +281,26 @@ class _MovieDetail extends State<MovieDetail> {
               const SizedBox(height: 20),
               Text(_movie['description'], style: const TextStyle(height: 1.5)),
               const SizedBox(height: 30),
+              if (casts.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Top Casts", style: TextStyle(fontSize: 20)),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 225,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: casts.length,
+                        itemBuilder: (context, index) {
+                          return AppCards.castCard(
+                              cast: casts[index], context: context);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                  ],
+                ),
               const Text('Trailer', style: TextStyle(fontSize: 20)),
               const SizedBox(height: 30),
               player,
