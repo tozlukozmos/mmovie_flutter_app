@@ -44,6 +44,11 @@ class _Feed extends State<Feed> {
             ),
             AppSlider.movieSlider(
               context: context,
+              title: "Science Fiction",
+              isOrderByRating: false,
+            ),
+            AppSlider.movieSlider(
+              context: context,
               title: "Drama",
               isOrderByRating: true,
             ),
