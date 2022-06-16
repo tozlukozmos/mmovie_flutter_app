@@ -26,7 +26,7 @@ class _Search extends State<Search> {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
               child: AppForm.appSearchField(
-                hint: "Search by movie name or category",
+                hint: "Search by movie, cast or category name",
                 controller: _searchController,
                 onChanged: (String value) {
                   setState(() {
@@ -54,13 +54,35 @@ class _Search extends State<Search> {
                   );
                 } else {
                   //search algorithm
-                  List movies = snapshot.data!.docs.map((doc) => doc).toList();
-                  movies = movies
-                      .where((s) => (s['name']
+                  //List movies = snapshot.data!.docs.map((doc) => doc).toList();
+
+                  List movies = [];
+                  //List movies = snapshot.data!.docs.map((doc) => doc).toList();
+                  for (var element in snapshot.data!.docs) {
+                    if (!element.data().toString().contains('casts')) {
+                      if (element['name']
                               .toLowerCase()
                               .contains(_searchQuery.toLowerCase()) ||
-                          searchCategory(s["categories"], _searchQuery)))
-                      .toList();
+                          searchCategory(element["categories"], _searchQuery)) {
+                        movies.add(element);
+                      }
+                    } else {
+                      if (element['name']
+                              .toLowerCase()
+                              .contains(_searchQuery.toLowerCase()) ||
+                          searchCategory(element["categories"], _searchQuery) ||
+                          searchActor(element["casts"], _searchQuery)) {
+                        movies.add(element);
+                      }
+                    }
+                  }
+
+                 // movies = movies
+                   //   .where((s) => (s['name']
+                     //         .toLowerCase()
+                       //       .contains(_searchQuery.toLowerCase()) ||
+                         // searchCategory(s["categories"], _searchQuery)))
+                      //.toList();
 
                   return Column(
                     children: movies.map((e) {
@@ -92,17 +114,17 @@ class _Search extends State<Search> {
     return result;
   }
 
-  // bool searchActor(casts, searchQuery) {
-  //   bool result = false;
-  //   for (int i = 0; i < casts.length; i++) {
-  //     if (casts[i]["fullname"]
-  //         .toLowerCase()
-  //         .contains(searchQuery.toLowerCase())) {
-  //       result = true;
-  //     }
-  //   }
-  //   return result;
-  // }
+  bool searchActor(casts, searchQuery) {
+    bool result = false;
+    for (int i = 0; i < casts.length; i++) {
+      if (casts[i]["fullname"]
+          .toLowerCase()
+          .contains(searchQuery.toLowerCase())) {
+        result = true;
+      }
+    }
+    return result;
+  }
 
   @override
   void dispose() {
