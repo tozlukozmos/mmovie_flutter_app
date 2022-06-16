@@ -40,10 +40,6 @@ class _CastMovies extends State<CastMovies> {
             ),
             StreamBuilder<QuerySnapshot>(
               stream: _moviesStream
-                  .where(
-                    'casts',
-                    arrayContains: _cast,
-                  )
                   .orderBy(
                     'rating',
                     descending: true,
@@ -61,7 +57,17 @@ class _CastMovies extends State<CastMovies> {
                   );
                 } else {
                   //search algorithm
-                  List movies = snapshot.data!.docs.map((doc) => doc).toList();
+                  List movies = [];
+                  //List movies = snapshot.data!.docs.map((doc) => doc).toList();
+                  for (var element in snapshot.data!.docs) {
+                    if(element.data().toString().contains('casts')){
+                      movies.add(element);
+                    }
+                  }
+                  movies = movies
+                      .where(
+                          (s) => searchActor(s['casts'], _cast["fullname"]))
+                      .toList();
                   movies = movies
                       .where((s) => s['name']
                           .toLowerCase()
@@ -85,6 +91,18 @@ class _CastMovies extends State<CastMovies> {
         ),
       ),
     );
+  }
+
+  bool searchActor(casts, searchQuery) {
+    bool result = false;
+    for (int i = 0; i < casts.length; i++) {
+      if (casts[i]["fullname"]
+          .toLowerCase()
+          .contains(searchQuery.toLowerCase())) {
+        result = true;
+      }
+    }
+    return result;
   }
 
   @override
