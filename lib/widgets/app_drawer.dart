@@ -15,13 +15,17 @@ class AppDrawer extends StatelessWidget {
       Navigator.pushReplacementNamed(context, 'welcome_screen');
     }
 
+    String avatar = _auth.currentUser!.photoURL.toString();
+    avatar = avatar == "null"
+        ? "https://firebasestorage.googleapis.com/v0/b/my-first-project-5d32d.appspot.com/o/1655305702422?alt=media&token=06613e76-266a-4877-85b6-23b6da92b4bd"
+        : avatar;
+
     return Drawer(
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(_auth.currentUser!.photoURL.toString()),
+              backgroundImage: NetworkImage(avatar),
             ),
             accountName: const Text("Welcome,"),
             accountEmail: Text(_auth.currentUser!.email.toString()),
