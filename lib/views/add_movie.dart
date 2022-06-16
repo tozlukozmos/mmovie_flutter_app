@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
+import 'package:mmovie/widgets/app_alerts.dart';
 
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
@@ -20,6 +20,7 @@ class _AddMovie extends State<AddMovie> {
 
   final _formKey = GlobalKey<FormState>();
   final _formURLKey = GlobalKey<FormState>();
+
   // ignore: non_constant_identifier_names
   final TextEditingController _TMDMovieURLController = TextEditingController();
   final TextEditingController _movieNameController = TextEditingController();
@@ -83,7 +84,7 @@ class _AddMovie extends State<AddMovie> {
                     ),
                     const SizedBox(height: 20),
                     AppForm.appTextFormField(
-                      label: "IMDB Rating",
+                      label: "IMDB Rating (a decimal between 0 and 100)",
                       controller: _imdbRatingController,
                     ),
                     const SizedBox(height: 40),
@@ -191,9 +192,14 @@ class _AddMovie extends State<AddMovie> {
             .then(
               (value) => {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Movie added successfully'),
-                    duration: Duration(milliseconds: 1500),
+                  SnackBar(
+                    padding: const EdgeInsets.all(0),
+                    content: AppAlerts.appAlert(
+                      title: "Movie added successfully",
+                      color: Colors.green,
+                      icon: const Icon(Icons.check),
+                    ),
+                    duration: const Duration(milliseconds: 1500),
                   ),
                 ),
                 Navigator.pushReplacementNamed(context, "feed_screen"),
@@ -203,7 +209,12 @@ class _AddMovie extends State<AddMovie> {
               (error) => {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(error.toString()),
+                    padding: const EdgeInsets.all(0),
+                    content: AppAlerts.appAlert(
+                      title: error.toString(),
+                      color: Colors.red,
+                      icon: const Icon(Icons.clear),
+                    ),
                     duration: const Duration(milliseconds: 1500),
                   ),
                 ),
@@ -213,7 +224,12 @@ class _AddMovie extends State<AddMovie> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          padding: const EdgeInsets.all(0),
+          content: AppAlerts.appAlert(
+            title: e.toString(),
+            color: Colors.red,
+            icon: const Icon(Icons.clear),
+          ),
           duration: const Duration(milliseconds: 1500),
         ),
       );
@@ -234,44 +250,65 @@ class _AddMovie extends State<AddMovie> {
 
         String? imageMovie = responseMovies!.children[0].children[0].children[0]
             .children[0].attributes['data-srcset'];
+        imageMovie = imageMovie!
+            .substring(
+                imageMovie.indexOf(",") + 1, imageMovie.indexOf("2x") - 1)
+            .trim();
         var _casts =
             responseCasts[0].children[0].children[1].children[0].children;
 
         for (int i = 0; i < _casts.length - 1; i++) {
           String? imageCast =
               _casts[i].children[0].children[0].attributes["srcset"];
+          imageCast = imageCast == null
+              ? "https://firebasestorage.googleapis.com/v0/b/my-first-project-5d32d.appspot.com/o/1655306121671?alt=media&token=ceb6af74-99ef-457d-bae8-58211853fb55"
+              : 'https://image.tmdb.org/' +
+                  imageCast
+                      .substring(imageCast.indexOf(",") + 1,
+                          imageCast.indexOf("2x") - 1)
+                      .trim();
+          // print(imageCast);
           _newMovieCast = {
-            'image': 'https://image.tmdb.org/' +
-                imageCast!
-                    .substring(
-                        imageCast.indexOf(",") + 1, imageCast.indexOf("2x") - 1)
-                    .trim(),
+            'image': imageCast,
             'fullname': _casts[i].children[1].text,
             'actor-name': _casts[i].children[2].text,
           };
           casts.add(_newMovieCast);
         }
 
-        // print("name: " +
-        //     response.children[1].children[0].children[0].children[0].children[0]
-        //         .text);
-        // print("year: " +
-        //     response.children[1].children[0].children[0].children[0].children[1]
-        //         .text
-        //         .substring(1, 5));
+        /* print("name: " +
+          responseMovies.children[1].children[0].children[0].children[0]
+               .children[0].text);
+         print("year: " +
+             responseMovies.children[1].children[0].children[0].children[0].children[1]
+                 .text
+                 .substring(1, 5));*/
         // print("rating: " + _imdbRatingController.text);
         // print("runtime: 180");
 
-        // print("categories: " +
-        //     response.children[1].children[0].children[0].children[1].children[2]
-        //         .children
-        //         .map((e) => e.text)
-        //         .toList()
-        //         .toString());
+        var categories = responseMovies
+            .children[1].children[0].children[0].children[1].children.length;
+        List<String> _categories = categories < 4
+            ? responseMovies.children[1].children[0].children[0].children[1]
+                .children[1].children
+                .map((e) => e.text)
+                .toList()
+            : responseMovies.children[1].children[0].children[0].children[1]
+                .children[2].children
+                .map((e) => e.text)
+                .toList();
 
-        // print("description: " +
-        //     response.children[1].children[0].children[2].children[2].children[0]
-        //         .text);
+        var description =
+            responseMovies.children[1].children[0].children[2].children.length;
+        String _description = description < 4
+            ? responseMovies.children[1].children[0].children[2].children[1]
+                .children[0].text
+            : responseMovies.children[1].children[0].children[2].children[2]
+                .children[0].text;
+
+        //print(_categories.toString());
+        //print(_description);
+
         // print("image: " +
         //     'https://image.tmdb.org/' +
         //     image!
@@ -279,9 +316,26 @@ class _AddMovie extends State<AddMovie> {
         //         .trim());
         // print("trailer: " +
         //     'https://www.youtube.com/watch?v=' +
-        //     response.children[1].children[0].children[1].children[5].children[0]
+        //     responseMovies.children[1].children[0].children[1].children[5].children[0]
         //         .attributes["data-id"]
         //         .toString());
+
+        var trailer =
+            responseMovies.children[1].children[0].children[1].children.length;
+        String _trailer = trailer < 6
+            ? "q8LqhYtJzP0"
+            : responseMovies.children[1].children[0].children[1].children[5]
+                .children[0].attributes["data-id"]
+                .toString();
+        var runtime = responseMovies
+            .children[1].children[0].children[0].children[1].children.length;
+        String _runtime = runtime < 4
+            ? responseMovies.children[1].children[0].children[0].children[1]
+                .children[2].text
+                .trim()
+            : responseMovies.children[1].children[0].children[0].children[1]
+                .children[3].text
+                .trim();
 
         _newMovie = {
           "name": responseMovies
@@ -290,26 +344,13 @@ class _AddMovie extends State<AddMovie> {
               .children[1].children[0].children[0].children[0].children[1].text
               .substring(1, 5)),
           "rating": int.parse(_imdbRatingController.text),
-          "runtime": convertToMinutes(responseMovies
-              .children[1].children[0].children[0].children[1].children[3].text
-              .trim()),
-          "categories": responseMovies.children[1].children[0].children[0]
-              .children[1].children[2].children
-              .map((e) => e.text)
-              .toList(),
+          "runtime": convertToMinutes(_runtime),
+          "categories": _categories,
           "favorites": [],
           "wishlist": [],
-          "description": responseMovies
-              .children[1].children[0].children[2].children[2].children[0].text,
-          "image": 'https://image.tmdb.org/' +
-              imageMovie!
-                  .substring(
-                      imageMovie.indexOf(",") + 1, imageMovie.indexOf("2x") - 1)
-                  .trim(),
-          "trailer": 'https://www.youtube.com/watch?v=' +
-              responseMovies.children[1].children[0].children[1].children[5]
-                  .children[0].attributes["data-id"]
-                  .toString(),
+          "description": _description,
+          "image": 'https://image.tmdb.org/' + imageMovie,
+          "trailer": 'https://www.youtube.com/watch?v=' + _trailer,
           "casts": casts,
           "created": DateTime.now(),
         };
@@ -318,9 +359,14 @@ class _AddMovie extends State<AddMovie> {
             .then(
               (value) => {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Movie added successfully'),
-                    duration: Duration(milliseconds: 1500),
+                  SnackBar(
+                    padding: const EdgeInsets.all(0),
+                    content: AppAlerts.appAlert(
+                      title: "Movie added successfully",
+                      color: Colors.green,
+                      icon: const Icon(Icons.check),
+                    ),
+                    duration: const Duration(milliseconds: 1500),
                   ),
                 ),
                 Navigator.pushReplacementNamed(context, "feed_screen"),
@@ -330,7 +376,12 @@ class _AddMovie extends State<AddMovie> {
               (error) => {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("world" + error.toString()),
+                    padding: const EdgeInsets.all(0),
+                    content: AppAlerts.appAlert(
+                      title: error.toString(),
+                      color: Colors.red,
+                      icon: const Icon(Icons.clear),
+                    ),
                     duration: const Duration(milliseconds: 1500),
                   ),
                 ),
@@ -338,12 +389,43 @@ class _AddMovie extends State<AddMovie> {
             );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("hello" + e.toString()),
-          duration: const Duration(milliseconds: 1500),
-        ),
-      );
+      if (e.toString().contains("No host")) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            padding: const EdgeInsets.all(0),
+            content: AppAlerts.appAlert(
+              title: "Invalid TMDB movie URL",
+              color: Colors.red,
+              icon: const Icon(Icons.clear),
+            ),
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
+      } else if (e.toString().contains("radix-10 number")) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            padding: const EdgeInsets.all(0),
+            content: AppAlerts.appAlert(
+              title: "IMDB rating can be only decimal",
+              color: Colors.red,
+              icon: const Icon(Icons.clear),
+            ),
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            padding: const EdgeInsets.all(0),
+            content: AppAlerts.appAlert(
+              title: e.toString(),
+              color: Colors.red,
+              icon: const Icon(Icons.clear),
+            ),
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
+      }
     }
   }
 

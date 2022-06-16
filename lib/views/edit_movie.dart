@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/app_alerts.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
 
@@ -67,9 +68,14 @@ class EditMovie extends StatelessWidget {
               .then(
                 (value) => {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Movie edited successfully'),
-                      duration: Duration(milliseconds: 1500),
+                    SnackBar(
+                      padding: const EdgeInsets.all(0),
+                      content: AppAlerts.appAlert(
+                        title: "Movie edited successfully",
+                        color: Colors.green,
+                        icon: const Icon(Icons.check),
+                      ),
+                      duration: const Duration(milliseconds: 1500),
                     ),
                   ),
                   Navigator.pushNamed(context, "feed_screen"),
@@ -79,7 +85,12 @@ class EditMovie extends StatelessWidget {
                 (error) => {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(error.toString()),
+                      padding: const EdgeInsets.all(0),
+                      content: AppAlerts.appAlert(
+                        title: error.toString(),
+                        color: Colors.red,
+                        icon: const Icon(Icons.clear),
+                      ),
                       duration: const Duration(milliseconds: 1500),
                     ),
                   ),
@@ -104,9 +115,14 @@ class EditMovie extends StatelessWidget {
             .then(
               (value) => {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Movie deleted successfully'),
-                    duration: Duration(milliseconds: 1500),
+                  SnackBar(
+                    padding: const EdgeInsets.all(0),
+                    content: AppAlerts.appAlert(
+                      title: "Movie deleted successfully",
+                      color: Colors.green,
+                      icon: const Icon(Icons.check),
+                    ),
+                    duration: const Duration(milliseconds: 1500),
                   ),
                 ),
                 Navigator.pushNamed(context, "feed_screen"),
@@ -116,7 +132,12 @@ class EditMovie extends StatelessWidget {
               (error) => {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(error.toString()),
+                    padding: const EdgeInsets.all(0),
+                    content: AppAlerts.appAlert(
+                      title: error.toString(),
+                      color: Colors.red,
+                      icon: const Icon(Icons.clear),
+                    ),
                     duration: const Duration(milliseconds: 1500),
                   ),
                 ),
