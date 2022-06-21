@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 import 'package:mmovie/widgets/app_alerts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
@@ -15,8 +17,9 @@ class AddMovie extends StatefulWidget {
 }
 
 class _AddMovie extends State<AddMovie> {
-  final CollectionReference _movies =
-      FirebaseFirestore.instance.collection('movies');
+  final _auth = FirebaseAuth.instance;
+  final _movies = FirebaseFirestore.instance.collection('movies');
+  final _logs = FirebaseFirestore.instance.collection('logs');
 
   final _formKey = GlobalKey<FormState>();
   final _formURLKey = GlobalKey<FormState>();
@@ -31,6 +34,21 @@ class _AddMovie extends State<AddMovie> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _trailerController = TextEditingController();
+
+  List movieDataset = [];
+
+  Future<void> getMovieDataset() async {
+    await _logs.get().then((QuerySnapshot querySnapshot) {
+      setState(() {
+        for (var doc in querySnapshot.docs) {
+          if (doc["user_id"] == _auth.currentUser!.uid) {
+            movieDataset = doc["movie_dataset"];
+          }
+        }
+      });
+    });
+  }
+
   Map<String, dynamic> _newMovie = {
     "name": "",
     "year": 0,
@@ -44,11 +62,18 @@ class _AddMovie extends State<AddMovie> {
     "image": "",
     "trailer": "",
   };
+
   Map<String, dynamic> _newMovieCast = {
     "fullname": "",
     "actor-name": "",
     "image": "",
   };
+
+  @override
+  void initState() {
+    getMovieDataset();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +123,72 @@ class _AddMovie extends State<AddMovie> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 30),
+                    const Text(
+                      "What is TMDB Movie URL?",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "It is a website for movie data. You should go to the website and search which movie you want to add. Then, you should copy movie profile link which is the current page URL. That's it!",
+                      style: TextStyle(height: 1.5),
+                    ),
+                    const SizedBox(height: 20),
+                    AppButtons.appOutlinedButtonIcon(
+                      name: "Go to TMDB Website",
+                      icon: const Icon(Icons.link),
+                      onPressed: () async {
+                        final Uri _url =
+                            Uri.parse('https://www.themoviedb.org/');
+                        if (!await launchUrl(
+                          _url,
+                          mode: LaunchMode.externalApplication,
+                        )) {
+                          throw ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              padding: const EdgeInsets.all(0),
+                              content: AppAlerts.appAlert(
+                                title: "Could not launch $_url",
+                                color: Colors.red,
+                                icon: const Icon(Icons.clear),
+                              ),
+                              duration: const Duration(milliseconds: 1500),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    const Text(
+                      "What is IMDB Rating?",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "It is a website for evaluating the popularity of any movie. Therefore, we want you to add this score to help others, how the movie is good you added. For that, you can go to IMDB website and search which movie you want to add. Then add this score here. That's it!",
+                      style: TextStyle(height: 1.5),
+                    ),
+                    const SizedBox(height: 20),
+                    AppButtons.appOutlinedButtonIcon(
+                      name: "Go to IMDB Website",
+                      icon: const Icon(Icons.link),
+                      onPressed: () async {
+                        final Uri _url = Uri.parse('https://www.imdb.com/');
+                        if (!await launchUrl(_url)) {
+                          throw ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              padding: const EdgeInsets.all(0),
+                              content: AppAlerts.appAlert(
+                                title: "Could not launch $_url",
+                                color: Colors.red,
+                                icon: const Icon(Icons.clear),
+                              ),
+                              duration: const Duration(milliseconds: 1500),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -190,7 +281,13 @@ class _AddMovie extends State<AddMovie> {
         await _movies
             .add(_newMovie)
             .then(
-              (value) => {
+              (value) async => {
+                movieDataset.add(_movies.doc().id),
+                await _logs
+                    .doc(_auth.currentUser!.uid)
+                    .update({"movie_dataset": movieDataset})
+                    .then((value) => null)
+                    .catchError((error) => null),
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     padding: const EdgeInsets.all(0),
@@ -357,7 +454,13 @@ class _AddMovie extends State<AddMovie> {
         await _movies
             .add(_newMovie)
             .then(
-              (value) => {
+              (value) async => {
+                movieDataset.add(_movies.doc().id),
+                await _logs
+                    .doc(_auth.currentUser!.uid)
+                    .update({"movie_dataset": movieDataset})
+                    .then((value) => null)
+                    .catchError((error) => null),
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     padding: const EdgeInsets.all(0),

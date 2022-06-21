@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../widgets/app_alerts.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
 
@@ -115,23 +116,38 @@ class _Login extends State<Login> {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No user found for that email'),
-            duration: Duration(milliseconds: 1500),
+          SnackBar(
+            padding: const EdgeInsets.all(0),
+            content: AppAlerts.appAlert(
+              title: "No user found for that email",
+              color: Colors.red,
+              icon: const Icon(Icons.clear),
+            ),
+            duration: const Duration(milliseconds: 1500),
           ),
         );
       } else if (e.code == 'wrong-password') {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Wrong password provided for that user'),
-            duration: Duration(milliseconds: 1500),
+          SnackBar(
+            padding: const EdgeInsets.all(0),
+            content: AppAlerts.appAlert(
+              title: "Wrong password provided for that user",
+              color: Colors.red,
+              icon: const Icon(Icons.clear),
+            ),
+            duration: const Duration(milliseconds: 1500),
           ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          padding: const EdgeInsets.all(0),
+          content: AppAlerts.appAlert(
+            title: e.toString(),
+            color: Colors.red,
+            icon: const Icon(Icons.clear),
+          ),
           duration: const Duration(milliseconds: 1500),
         ),
       );
@@ -152,7 +168,12 @@ class _Login extends State<Login> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          padding: const EdgeInsets.all(0),
+          content: AppAlerts.appAlert(
+            title: e.toString(),
+            color: Colors.red,
+            icon: const Icon(Icons.clear),
+          ),
           duration: const Duration(milliseconds: 1500),
         ),
       );

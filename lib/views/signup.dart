@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/app_alerts.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_form.dart';
 
@@ -16,6 +18,13 @@ class _Signup extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  Map<String, dynamic> _userLog = {
+    "user_id": 0,
+    "movie_dataset": [],
+    "watched": [],
+    "created": 0,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -88,21 +97,40 @@ class _Signup extends State<Signup> {
           email: _emailController.text,
           password: _passwordController.text,
         );
+        final CollectionReference _logs =
+        FirebaseFirestore.instance.collection('logs');
+        _userLog = {
+          "user_id": _auth.currentUser!.uid,
+          "movie_dataset": [],
+          "watched": [],
+          "created": DateTime.now(),
+        };
+        await _logs.doc((_auth.currentUser!.uid)).set(_userLog).then((value) => null).catchError((error) => null);
         Navigator.pushReplacementNamed(context, "feed_screen");
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('An account already exists for that email'),
-            duration: Duration(milliseconds: 1500),
+          SnackBar(
+            padding: const EdgeInsets.all(0),
+            content: AppAlerts.appAlert(
+              title: "An account already exists for that email",
+              color: Colors.red,
+              icon: const Icon(Icons.clear),
+            ),
+            duration: const Duration(milliseconds: 1500),
           ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          padding: const EdgeInsets.all(0),
+          content: AppAlerts.appAlert(
+            title: e.toString(),
+            color: Colors.red,
+            icon: const Icon(Icons.clear),
+          ),
           duration: const Duration(milliseconds: 1500),
         ),
       );
