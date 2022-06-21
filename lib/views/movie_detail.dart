@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mmovie/widgets/app_cards.dart';
+
 // import 'package:http/http.dart' as http;
 // import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -21,6 +22,7 @@ class MovieDetail extends StatefulWidget {
 class _MovieDetail extends State<MovieDetail> {
   final _auth = FirebaseAuth.instance;
   final _movies = FirebaseFirestore.instance.collection('movies');
+  final _logs = FirebaseFirestore.instance.collection('logs');
 
   // Map cast = {
   //   'fullname': "Leonardo DiCaprio",
@@ -32,6 +34,7 @@ class _MovieDetail extends State<MovieDetail> {
   // List casts = [];
 
   List admins = [];
+  List movieDataset = [];
 
   Future<void> getAdmins() async {
     final _admins = FirebaseFirestore.instance.collection('admins');
@@ -44,9 +47,22 @@ class _MovieDetail extends State<MovieDetail> {
     });
   }
 
+  Future<void> getMovieDataset() async {
+    await _logs.get().then((QuerySnapshot querySnapshot) {
+      setState(() {
+        for (var doc in querySnapshot.docs) {
+          if (doc["user_id"] == _auth.currentUser!.uid) {
+            movieDataset = doc["movie_dataset"];
+          }
+        }
+      });
+    });
+  }
+
   @override
   void initState() {
     getAdmins();
+    getMovieDataset();
     super.initState();
   }
 
@@ -76,7 +92,16 @@ class _MovieDetail extends State<MovieDetail> {
         await _movies
             .doc(_movie["id"])
             .update({"favorites": _movie["favorites"]})
-            .then((value) => {
+            .then((value) async => {
+                  if (movieDataset.contains(_movie["id"]))
+                    {
+                      movieDataset.remove(_movie["id"]),
+                    },
+                  await _logs
+                      .doc(_auth.currentUser!.uid)
+                      .update({"movie_dataset": movieDataset})
+                      .then((value) => null)
+                      .catchError((error) => null),
                   setState(() {
                     _isFavorite = !_isFavorite;
                   }),
@@ -96,7 +121,13 @@ class _MovieDetail extends State<MovieDetail> {
         await _movies
             .doc(_movie["id"])
             .update({"favorites": _movie["favorites"]})
-            .then((value) => {
+            .then((value) async => {
+                  movieDataset.add(_movie["id"]),
+                  await _logs
+                      .doc(_auth.currentUser!.uid)
+                      .update({"movie_dataset": movieDataset})
+                      .then((value) => null)
+                      .catchError((error) => null),
                   setState(() {
                     _isFavorite = !_isFavorite;
                   }),
@@ -120,7 +151,16 @@ class _MovieDetail extends State<MovieDetail> {
         await _movies
             .doc(_movie["id"])
             .update({"wishlist": _movie["wishlist"]})
-            .then((value) => {
+            .then((value) async => {
+                  if (movieDataset.contains(_movie["id"]))
+                    {
+                      movieDataset.remove(_movie["id"]),
+                    },
+                  await _logs
+                      .doc(_auth.currentUser!.uid)
+                      .update({"movie_dataset": movieDataset})
+                      .then((value) => null)
+                      .catchError((error) => null),
                   setState(() {
                     _isWishlist = !_isWishlist;
                   }),
@@ -140,7 +180,13 @@ class _MovieDetail extends State<MovieDetail> {
         await _movies
             .doc(_movie["id"])
             .update({"wishlist": _movie["wishlist"]})
-            .then((value) => {
+            .then((value) async => {
+                  movieDataset.add(_movie["id"]),
+                  await _logs
+                      .doc(_auth.currentUser!.uid)
+                      .update({"movie_dataset": movieDataset})
+                      .then((value) => null)
+                      .catchError((error) => null),
                   setState(() {
                     _isWishlist = !_isWishlist;
                   }),

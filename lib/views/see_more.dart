@@ -39,20 +39,25 @@ class _SeeMore extends State<SeeMore> {
               ),
             ),
             StreamBuilder<QuerySnapshot>(
-              stream: _moviesStream
-                  .where(
-                    'categories',
-                    arrayContains: _title == 'Popular' ? null : _title,
-                  )
-                  .where(
-                    'rating',
-                    isGreaterThan: _title == 'Popular' ? 80 : null,
-                  )
-                  .orderBy(
-                    'rating',
-                    descending: true,
-                  )
-                  .snapshots(),
+              stream: _title == "Recently Added"
+                  ? _moviesStream
+                      .orderBy('created', descending: true)
+                      .limit(30)
+                      .snapshots()
+                  : _moviesStream
+                      .where(
+                        'categories',
+                        arrayContains: _title == 'Popular' ? null : _title,
+                      )
+                      .where(
+                        'rating',
+                        isGreaterThan: _title == 'Popular' ? 80 : null,
+                      )
+                      .orderBy(
+                        'rating',
+                        descending: true,
+                      )
+                      .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');

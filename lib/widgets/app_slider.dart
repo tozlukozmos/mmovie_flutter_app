@@ -32,18 +32,23 @@ class AppSlider {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: StreamBuilder(
-            stream: _moviesStream
-                .where(
-                  'categories',
-                  arrayContains: title == "Popular" ? null : title,
-                )
-                .where(
-                  'rating',
-                  isGreaterThan: title == "Popular" ? 80 : 60,
-                )
-                .orderBy('rating', descending: true)
-                .limit(15)
-                .snapshots(),
+            stream: title == "Recently Added"
+                ? _moviesStream
+                    .orderBy('created', descending: true)
+                    .limit(15)
+                    .snapshots()
+                : _moviesStream
+                    .where(
+                      'categories',
+                      arrayContains: title == "Popular" ? null : title,
+                    )
+                    .where(
+                      'rating',
+                      isGreaterThan: title == "Popular" ? 80 : 60,
+                    )
+                    .orderBy('rating', descending: true)
+                    .limit(15)
+                    .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
                 return const Text('Something went wrong');
