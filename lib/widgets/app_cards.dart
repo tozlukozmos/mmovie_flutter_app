@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_buttons.dart';
+
 class AppCards {
   static Widget movieCard({
     required Map movie,
@@ -173,5 +175,88 @@ class AppCards {
             ],
           )),
     );
+  }
+
+  static Widget movieHeroCard({
+    required Map movie,
+    required BuildContext context,
+    required Icon icon,
+    required Function() onPressed
+  }) {
+    return Card(
+        margin: const EdgeInsets.only(top: 5, bottom: 30),
+        child: Stack(
+          alignment: AlignmentDirectional.centerEnd,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.network(
+                movie["image"],
+                width: 160,
+                height: 240,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned.fill(
+              child: Align(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        ThemeData.dark().primaryColorDark,
+                        Colors.transparent
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 15,
+              top: 10,
+              bottom: 10,
+              width: 160,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie["name"],
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    movie["description"],
+                    maxLines: 6,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 13, height: 1.5),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppButtons.appOutlinedButton(
+                        name: "see now",
+                        onPressed: () {
+                          Navigator.pushNamed(context, 'movie_detail_screen',
+                              arguments: {'movie': movie});
+                        },
+                      ),
+                      AppButtons.appIconButton(
+                        name: "watched",
+                        icon: icon,
+                        onPressed: onPressed,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 }
