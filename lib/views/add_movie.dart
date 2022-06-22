@@ -347,22 +347,25 @@ class _AddMovie extends State<AddMovie> {
 
         String? imageMovie = responseMovies!.children[0].children[0].children[0]
             .children[0].attributes['data-srcset'];
+        // print(imageMovie);
         imageMovie = imageMovie!
             .substring(
-                imageMovie.indexOf(",") + 1, imageMovie.indexOf("2x") - 1)
+                imageMovie.indexOf(",") + 1, imageMovie.length - 3)
             .trim();
+        // print(imageMovie);
         var _casts =
             responseCasts[0].children[0].children[1].children[0].children;
 
         for (int i = 0; i < _casts.length - 1; i++) {
           String? imageCast =
               _casts[i].children[0].children[0].attributes["srcset"];
+          // print(imageCast);
           imageCast = imageCast == null
               ? "https://firebasestorage.googleapis.com/v0/b/my-first-project-5d32d.appspot.com/o/1655306121671?alt=media&token=ceb6af74-99ef-457d-bae8-58211853fb55"
-              : 'https://image.tmdb.org/' +
+              : 'https://image.tmdb.org' +
                   imageCast
                       .substring(imageCast.indexOf(",") + 1,
-                          imageCast.indexOf("2x") - 1)
+                          imageCast.length - 3)
                       .trim();
           // print(imageCast);
           _newMovieCast = {
