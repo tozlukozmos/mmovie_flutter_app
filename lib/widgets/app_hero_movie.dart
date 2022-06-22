@@ -19,6 +19,7 @@ class _HeroMovie extends State<HeroMovie> {
   bool isWatched = false;
 
   Future<void> getMovieIds() async {
+    // print("getMovieIds");
     final _logs = FirebaseFirestore.instance.collection('logs');
     await _logs.doc(_auth.currentUser!.uid).get().then((doc) {
       List movieIds = doc["movie_dataset"].toSet().toList();
@@ -28,11 +29,17 @@ class _HeroMovie extends State<HeroMovie> {
   }
 
   Future<void> getMovieCategories(List movieIds, List watchedIds) async {
+    // print("getMovieCategories");
     final _movies = FirebaseFirestore.instance.collection('movies');
     List movieCategories = [];
+    // print("hello");
     for (var movieId in movieIds) {
+      // print(movieId);
+      // print(movieIds);
       await _movies.doc(movieId).get().then((doc) {
-        movieCategories = [...movieCategories, ...doc["categories"]];
+        if(doc.exists){
+          movieCategories = [...movieCategories, ...doc["categories"]];
+        }
       });
     }
     getHeroMovie(countCategory(movieCategories), movieIds, watchedIds);
@@ -44,7 +51,9 @@ class _HeroMovie extends State<HeroMovie> {
     for (var category in uniqueCategories) {
       result.add({
         "category": category,
-        "amount": categories.where((e) => e == category).length,
+        "amount": categories
+            .where((e) => e == category)
+            .length,
       });
     }
     result.sort((a, b) => (b['amount']).compareTo(a['amount']));
@@ -52,7 +61,9 @@ class _HeroMovie extends State<HeroMovie> {
     return result;
   }
 
-  Future<void> getHeroMovie(List categories, List movieIds, List watchedIds) async {
+  Future<void> getHeroMovie(List categories,
+      List movieIds,
+      List watchedIds,) async {
     List movies = [];
     final _movies = FirebaseFirestore.instance.collection('movies');
     await _movies.get().then((QuerySnapshot querySnapshot) {
@@ -63,12 +74,21 @@ class _HeroMovie extends State<HeroMovie> {
               Map<String, dynamic> movie = doc.data() as Map<String, dynamic>;
               Map<String, dynamic> _movie = {"id": doc.id, ...movie};
               movies.add(_movie);
+              break;
+            } else {
+              Map<String, dynamic> movie =
+              querySnapshot.docs[6].data() as Map<String, dynamic>;
+              Map<String, dynamic> _movie = {
+                "id": querySnapshot.docs.first.id,
+                ...movie
+              };
+              movies.add(_movie);
             }
           }
         }
       } else {
         Map<String, dynamic> movie =
-            querySnapshot.docs.first.data() as Map<String, dynamic>;
+        querySnapshot.docs[2].data() as Map<String, dynamic>;
         Map<String, dynamic> _movie = {
           "id": querySnapshot.docs.first.id,
           ...movie
@@ -84,6 +104,34 @@ class _HeroMovie extends State<HeroMovie> {
     });
   }
 
+  void watched() async {
+    final _logs = FirebaseFirestore.instance.collection('logs');
+    await _logs.doc(_auth.currentUser!.uid).get().then((doc) {
+      List watchedIds = doc["watched"];
+      if (watchedIds.contains(heroMovie["id"])) {
+        watchedIds.remove(heroMovie["id"]);
+        setState(() {
+          isWatched = false;
+        });
+        _logs
+            .doc(_auth.currentUser!.uid)
+            .update({"watched": watchedIds})
+            .then((value) => null)
+            .catchError((error) => null);
+      } else {
+        watchedIds.add(heroMovie["id"]);
+        setState(() {
+          isWatched = true;
+        });
+        _logs
+            .doc(_auth.currentUser!.uid)
+            .update({"watched": watchedIds})
+            .then((value) => null)
+            .catchError((error) => null);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -95,46 +143,24 @@ class _HeroMovie extends State<HeroMovie> {
     return isLoading
         ? SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 300,
+            height: 245,
             child: const Center(child: CircularProgressIndicator()),
           )
         : AppCards.movieHeroCard(
             movie: heroMovie,
             icon: isWatched ? Icon(
               Icons.remove_red_eye_sharp,
-              color: Theme.of(context).secondaryHeaderColor,
+              color: Theme
+                  .of(context)
+                  .secondaryHeaderColor,
             ) : Icon(
               Icons.remove_red_eye_outlined,
-              color: Theme.of(context).secondaryHeaderColor,
+              color: Theme
+                  .of(context)
+                  .secondaryHeaderColor,
             ),
             context: context,
-            onPressed: () async {
-              final _logs = FirebaseFirestore.instance.collection('logs');
-              await _logs.doc(_auth.currentUser!.uid).get().then((doc) {
-                List watchedIds = doc["watched"];
-                if(watchedIds.contains(heroMovie["id"])){
-                  watchedIds.remove(heroMovie["id"]);
-                  setState(() {
-                    isWatched = false;
-                  });
-                  _logs
-                      .doc(_auth.currentUser!.uid)
-                      .update({"watched": watchedIds})
-                      .then((value) => null)
-                      .catchError((error) => null);
-                } else {
-                  watchedIds.add(heroMovie["id"]);
-                  setState(() {
-                    isWatched = true;
-                  });
-                  _logs
-                      .doc(_auth.currentUser!.uid)
-                      .update({"watched": watchedIds})
-                      .then((value) => null)
-                      .catchError((error) => null);
-                }
-              });
-            },
+            onPressed: watched,
           );
   }
 }
