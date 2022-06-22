@@ -192,8 +192,8 @@ class AppCards {
               borderRadius: BorderRadius.circular(5),
               child: Image.network(
                 movie["image"],
-                width: 160,
-                height: 240,
+                width: 140,
+                height: 210,
                 fit: BoxFit.cover,
               ),
             ),
@@ -216,9 +216,9 @@ class AppCards {
             ),
             Positioned(
               left: 15,
-              top: 10,
+              top: 15,
               bottom: 10,
-              width: 160,
+              width: (MediaQuery.of(context).size.width/2)-24,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +231,7 @@ class AppCards {
                   const SizedBox(height: 10),
                   Text(
                     movie["description"],
-                    maxLines: 6,
+                    maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 13, height: 1.5),
                   ),
