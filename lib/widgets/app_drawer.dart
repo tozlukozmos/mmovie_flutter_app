@@ -24,6 +24,7 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
+            decoration: const BoxDecoration(color: Colors.black),
             currentAccountPicture: CircleAvatar(
               backgroundImage: NetworkImage(avatar),
             ),
