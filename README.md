@@ -1,6 +1,21 @@
 # MMovie Flutter App
 I have been experiencing some difficulties when my cousins, friends, and siblings suggesting a movie to me, such as forgetting and missing messages. Thanks to the application we may have a digital movie archive, and we can share movies in easier way, we can create wish list and favourites list. I hope it would work as expected.
 
+## Demo
+[https://www.youtube.com/watch?v=3ZrKV8t5mWU&feature=youtu.be](https://www.youtube.com/watch?v=obfqVsJRhaY)
+
+## Authors
+
+- [@tozlukozmos](https://github.com/tozlukozmos)
+- [@OFD16](https://github.com/OFD16)
+- [@furkancvk](https://github.com/furkancvk)
+
+## Tech Stack
+
+**Client:** Dart, Flutter 
+
+**Backend:** Firebase
+
 <br/>
 
 ## Dependencies
@@ -20,21 +35,6 @@ I have been experiencing some difficulties when my cousins, friends, and sibling
 (v2.0.10) for making relative path from URLs
 
 <br/>
-
-## Authors
-
-- [@tozlukozmos](https://github.com/tozlukozmos)
-- [@OFD16](https://github.com/OFD16)
-- [@furkancvk](https://github.com/furkancvk)
-
-## Tech Stack
-
-**Client:** Dart, Flutter 
-
-**Backend:** Firebase
-
-## Demo
-[https://www.youtube.com/watch?v=3ZrKV8t5mWU&feature=youtu.be](https://www.youtube.com/watch?v=obfqVsJRhaY)
 
 ## Getting Started
 ```
