@@ -23,9 +23,9 @@ I have been experiencing some difficulties when my cousins, friends, and sibling
 
 ## Authors
 
+- [@tozlukozmos](https://github.com/tozlukozmos)
 - [@OFD16](https://github.com/OFD16)
 - [@furkancvk](https://github.com/furkancvk)
-- [@tozlukozmos](https://github.com/tozlukozmos)
 
 ## Tech Stack
 
