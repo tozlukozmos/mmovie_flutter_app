@@ -157,6 +157,7 @@ class _Login extends State<Login> {
   void loginWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      print("google auth ${googleUser}");
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -166,6 +167,7 @@ class _Login extends State<Login> {
       await _auth.signInWithCredential(credential);
       Navigator.pushReplacementNamed(context, "feed_screen");
     } catch (e) {
+      print("error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           padding: const EdgeInsets.all(0),

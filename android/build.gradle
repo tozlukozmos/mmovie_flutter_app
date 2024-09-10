@@ -4,12 +4,27 @@ buildscript {
         google()
         mavenCentral()
     }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'  // Updated this line
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.10'
+    
+    ext {
+        // Update these versions as needed
+        buildToolsVersion = "33.0.0"
+        minSdkVersion = 21
+        targetSdkVersion = 33
+        compileSdkVersion = 33
+        kotlin_version = '1.8.10'
     }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+    }
+
+    // dependencies {
+    //     classpath 'com.android.tools.build:gradle:7.4.2'  // Updated this line
+    //     classpath 'com.google.gms:google-services:4.3.10'
+    // }
 }
 
 allprojects {

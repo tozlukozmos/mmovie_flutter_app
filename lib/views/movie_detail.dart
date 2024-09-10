@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mmovie/widgets/app_cards.dart';
 
 // import 'package:http/http.dart' as http;
 // import 'package:path_provider/path_provider.dart';
@@ -11,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../widgets/app_buttons.dart';
+import '../widgets/app_cards.dart';
 
 class MovieDetail extends StatefulWidget {
   const MovieDetail({Key? key}) : super(key: key);

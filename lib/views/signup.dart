@@ -65,7 +65,7 @@ class _Signup extends State<Signup> {
                   "By signing up, you agree to our Terms and Data Policy.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: ThemeData.dark().backgroundColor,
+                    // color: ThemeData.dark(),
                   ),
                 ),
                 const SizedBox(height: 20),

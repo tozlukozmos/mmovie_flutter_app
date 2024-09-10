@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "91163665609-3p01ug06tg4b2abm50fjfrhte11tq7fb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mmovie",
+            "certificate_hash": "962f451599f9951c1242adecb0037febfee8f7a3"
+          }
+        },
+        {
           "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,6 +45,153 @@
             {
               "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "91163665609-25gf7rbq6spqpej2e9c4knhscpl09d73.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mmovie.solvio"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91163665609:android:cd2a9d1eef0217ce5f5918",
+        "android_client_info": {
+          "package_name": "com.mmovie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91163665609-sddtgpbghie9cj9g3v4bhci6b3cjnblu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mmovie",
+            "certificate_hash": "6b5c5c3aa36bb675567067e0c6bdafb36d6a5f24"
+          }
+        },
+        {
+          "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCZxJJuGhSM4XqIt142vIfmahDijz0Rak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "91163665609-25gf7rbq6spqpej2e9c4knhscpl09d73.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mmovie.solvio"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91163665609:android:11ec8b060b8dfe145f5918",
+        "android_client_info": {
+          "package_name": "com.mmovie.solvio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91163665609-nmvr277ajn115g7leeurg0sa4tpk97ot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mmovie.solvio",
+            "certificate_hash": "96ff763bc11856d26dddcb0238c85196b60b4119"
+          }
+        },
+        {
+          "client_id": "91163665609-pfpsd6qgbvk6nchd627f0r8nb6l4eko0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mmovie.solvio",
+            "certificate_hash": "ab9bfad7cbd61566b51034a588fee51daef411e7"
+          }
+        },
+        {
+          "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCZxJJuGhSM4XqIt142vIfmahDijz0Rak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "91163665609-25gf7rbq6spqpej2e9c4knhscpl09d73.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mmovie.solvio"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91163665609:android:4ece2963a50f164b5f5918",
+        "android_client_info": {
+          "package_name": "com.mmovie.tr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91163665609-j6fmlrq3mccc6sbfkog17f9fm2hjvvas.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mmovie.tr",
+            "certificate_hash": "6b5c5c3aa36bb675567067e0c6bdafb36d6a5f24"
+          }
+        },
+        {
+          "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCZxJJuGhSM4XqIt142vIfmahDijz0Rak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91163665609-l40njrp5enrve2g7oc3318437ippevep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "91163665609-25gf7rbq6spqpej2e9c4knhscpl09d73.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mmovie.solvio"
+              }
             }
           ]
         }
